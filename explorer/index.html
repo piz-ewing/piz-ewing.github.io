@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"piz-ewing.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="语言参考学习资料 A curated list of awesome resources A Compiler Writing Journey PL-Compiler-Resource write-a-C-interpreter Writing a C Compiler a set of C test programs Let’s Build A Simple Interpreter compil">
+<meta property="og:type" content="website">
+<meta property="og:title" content="explorer">
+<meta property="og:url" content="https://piz-ewing.github.io/explorer/index.html">
+<meta property="og:site_name" content="ewing">
+<meta property="og:description" content="语言参考学习资料 A curated list of awesome resources A Compiler Writing Journey PL-Compiler-Resource write-a-C-interpreter Writing a C Compiler a set of C test programs Let’s Build A Simple Interpreter compil">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-06-10T10:29:33.000Z">
+<meta property="article:modified_time" content="2026-01-13T08:39:05.456Z">
+<meta property="article:author" content="ewing">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://piz-ewing.github.io/explorer/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"zh-CN","comments":true,"permalink":"https://piz-ewing.github.io/explorer/index.html","path":"explorer/index.html","title":"explorer"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>explorer | ewing
+</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@next-theme/pjax@0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/pjax.js" defer></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.5.0/dist/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">ewing</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-explorer"><a href="/explorer/" rel="section"><i class="fa fa-binoculars fa-fw"></i>浏览</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%AD%E8%A8%80%E5%8F%82%E8%80%83"><span class="nav-number">1.</span> <span class="nav-text">语言参考</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99"><span class="nav-number">1.1.</span> <span class="nav-text">学习资料</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E5%8F%82%E8%80%83"><span class="nav-number">1.2.</span> <span class="nav-text">实现参考</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IR%E5%8F%82%E8%80%83"><span class="nav-number">1.3.</span> <span class="nav-text">IR参考</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%AD%E8%A8%80%E4%BB%BF%E7%9C%9F"><span class="nav-number">1.4.</span> <span class="nav-text">语言仿真</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E8%BD%AF%E4%BB%B6%E5%88%86%E6%9E%90"><span class="nav-number">1.5.</span> <span class="nav-text">静态软件分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8D%E7%BC%96%E8%AF%91"><span class="nav-number">1.6.</span> <span class="nav-text">反编译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JIT"><span class="nav-number">1.7.</span> <span class="nav-text">JIT</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E4%BB%BF%E7%9C%9F"><span class="nav-number">2.</span> <span class="nav-text">系统仿真</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0"><span class="nav-number">3.</span> <span class="nav-text">机器学习</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E6%9E%B6%E6%9E%84"><span class="nav-number">4.</span> <span class="nav-text">网络架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B%E5%AE%9E%E7%94%A8%E7%9A%84%E4%B8%9C%E8%A5%BF"><span class="nav-number">5.</span> <span class="nav-text">一些实用的东西</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B%E6%9C%89%E8%B6%A3%E7%9A%84%E4%B8%9C%E8%A5%BF"><span class="nav-number">6.</span> <span class="nav-text">一些有趣的东西</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B%E5%A4%8D%E6%9D%82%E7%9A%84%E4%B8%9C%E8%A5%BF"><span class="nav-number">7.</span> <span class="nav-text">一些复杂的东西</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B%E7%A7%83%E9%A1%B6%E7%9A%84%E4%B8%9C%E8%A5%BF"><span class="nav-number">8.</span> <span class="nav-text">一些秃顶的东西</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ewing"
+      src="https://avatars.githubusercontent.com/u/78925867?v=4">
+  <p class="site-author-name" itemprop="name">ewing</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/piz-ewing" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;piz-ewing" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:piz.ewing@gmail.com" title="E-Mail → mailto:piz.ewing@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner page posts-expand">
+
+
+    
+    
+    
+    <div class="post-block" lang="zh-CN"><header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">explorer
+</h1>
+
+<div class="post-meta-container">
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <h2 id="语言参考"><a href="#语言参考" class="headerlink" title="语言参考"></a>语言参考</h2><h3 id="学习资料"><a href="#学习资料" class="headerlink" title="学习资料"></a>学习资料</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/aalhour/awesome-compilers">A curated list of awesome resources</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/DoctorWkt/acwj">A Compiler Writing Journey</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/shining1984/PL-Compiler-Resource">PL-Compiler-Resource</a></li>
+<li><a target="_blank" rel="noopener" href="https://lotabout.me/2015/write-a-C-interpreter-1/">write-a-C-interpreter</a></li>
+<li><a target="_blank" rel="noopener" href="https://norasandler.com/archive/">Writing a C Compiler</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/nlsandler/write_a_c_compiler.git">a set of C test programs</a></li>
+<li><a target="_blank" rel="noopener" href="https://ruslanspivak.com/lsbasi-part1/">Let’s Build A Simple Interpreter</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/chyyuu/compiler_course_info/blob/master/readinglist.md">compiler_course_info_readinglist</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/chyyuu/compiler_course_info/blob/master/resources.md">compiler_course_info_book</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/0voice/kernel_awsome_feature">kernel_awsome_feature</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/rust-unofficial/awesome-rust">awesome-rust</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/rcore-os/rCore-Tutorial-Book-v3">rCore-Tutorial-Book</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/ExpLife0011/awesome-windows-kernel-security-development">awesome-windows-kernel-security-development</a></li>
+</ul>
+<h3 id="实现参考"><a href="#实现参考" class="headerlink" title="实现参考"></a>实现参考</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/rswier/c4">c4</a></li>
+<li><a target="_blank" rel="noopener" href="https://compcert.org/">compcert</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/rui314/chibicc">chibicc</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/larmel/lacc">lacc</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/vtereshkov/umka-lang">umka-lang</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/vlang/v">vlang</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/ziglang/zig/tree/master/src">ziglang</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/Kray-G/kinx.git">kinx</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/zpoint/CPython-Internals.git">CPython-Internals</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/AloneCafe/FROG">FROG</a></li>
+</ul>
+<h3 id="IR参考"><a href="#IR参考" class="headerlink" title="IR参考"></a>IR参考</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/robertmuth/Cwerg.git">Cwerg</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/vnmakarov/mir">mir</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/stevenknown/xoc">xoc</a></li>
+<li><a target="_blank" rel="noopener" href="https://gitee.com/openarkcompiler/OpenArkCompiler/blob/master/doc/en/MapleIRDesign.md">MapleIRDesign</a></li>
+<li><a target="_blank" rel="noopener" href="https://c9x.me/compile/">QBE</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/microvm/microvm-spec">microvm-spec</a></li>
+<li><a target="_blank" rel="noopener" href="http://cr.openjdk.java.net/~jrose/draft/code-media.html">Thinking About Intermediate Representations</a></li>
+</ul>
+<h3 id="语言仿真"><a href="#语言仿真" class="headerlink" title="语言仿真"></a>语言仿真</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/Nirari-Technologies/Tagha">Tagha</a></li>
+<li><a target="_blank" rel="noopener" href="https://justinmeiners.github.io/lc3-vm/">lc3-vm</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/rabbitvm/rabbit">rabbitvm</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.iteye.com/blog/rednaxelafx-362738">HotSpot C2</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/eaglx/VMPROTECT.git">VMPROTECT</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/danbev/learning-v8">learning-v8</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/jnz/q3vm">q3vm</a></li>
+</ul>
+<h3 id="静态软件分析"><a href="#静态软件分析" class="headerlink" title="静态软件分析"></a>静态软件分析</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/RangerNJU/Static-Program-Analysis-Book">Static Program Analysis Book</a></li>
+<li><a target="_blank" rel="noopener" href="https://liveclass.org.cn/cloudCourse/#/courseDetail/8mI06L2eRqk8GcsW">Static Program Analysis</a></li>
+</ul>
+<h3 id="反编译"><a href="#反编译" class="headerlink" title="反编译"></a>反编译</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/yegord/snowman">snowman – a native code to C&#x2F;C++ decompiler</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/cea-sec/miasm">miasm</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/uxmal/reko">reko</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/zneak/fcd/">fcd – An optimizing decompiler</a></li>
+</ul>
+<h3 id="JIT"><a href="#JIT" class="headerlink" title="JIT"></a>JIT</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/asmjit/asmjit">asmjit</a></li>
+</ul>
+<hr>
+<h2 id="系统仿真"><a href="#系统仿真" class="headerlink" title="系统仿真"></a>系统仿真</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://nju-projectn.github.io/ics-pa-gitbook/ics2021/">ics2021-nemu</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/FEX-Emu/FEX">FEX</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/ptitSeb/box86.git">box86</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/RPCS3/">rpcs3</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/grumpycoders/pcsx-redux">pcsx-redux</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/nesbox/TIC-80">TIC-80</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.boxedwine.org/">boxedwine</a></li>
+</ul>
+<h2 id="机器学习"><a href="#机器学习" class="headerlink" title="机器学习"></a>机器学习</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/conda-forge/miniforge/#download">miniforge</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/pytorch/pytorch">pytorch</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/ultralytics/yolov5">yolov5</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/Tencent/GameAISDK.git">GameAISDK</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/7eu7d7/genshin_auto_fish">genshin_auto_fish</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/tianqiraf/DouZero_For_HappyDouDiZhu">DouZero_For_HappyDouDiZhu</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/Dod-o/Statistical-Learning-Method_Code">Statistical-Learning-Method_Code</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/AMAI-GmbH/AI-Expert-Roadmap">AI-Expert-Roadmap</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/geohot/tinygrad">tinygrad</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/ml-tooling/best-of-ml-python">best-of-ml-python</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/pwwang/cnn-convoluter">cnn-convoluter</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/nsfw-filter/nsfw-filter">nsfw-filter</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/chenyuntc/pytorch-book">pytorch-book</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/MLEveryday/100-Days-Of-ML-Code">100-Days-Of-ML-Code</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/rasbt/deeplearning-models">deeplearning-models</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/Eurus-Holmes/LIS-YNP">LIS-YNP (Life Is Short-You Need Pytorch)</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/Latitude-Archives/AIDungeon">AIDungeon</a></li>
+<li><a target="_blank" rel="noopener" href="https://scikit-opt.github.io/scikit-opt/#/zh/README">scikit-opt</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/donnemartin/data-science-ipython-notebooks.git">data-science-ipython-notebooks</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/Sentdex/pygta5.git">pygta5</a></li>
+</ul>
+<h2 id="网络架构"><a href="#网络架构" class="headerlink" title="网络架构"></a>网络架构</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.simtoco.com/#/albums?id=1000019">distributed systems</a></li>
+</ul>
+<h2 id="一些实用的东西"><a href="#一些实用的东西" class="headerlink" title="一些实用的东西"></a>一些实用的东西</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://gcc.godbolt.org/">c++ compilers online</a></li>
+</ul>
+<h2 id="一些有趣的东西"><a href="#一些有趣的东西" class="headerlink" title="一些有趣的东西"></a>一些有趣的东西</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://hellogithub.com/">hellogithub</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/trimstray/the-book-of-secret-knowledge">the-book-of-secret-knowledge</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/danistefanovic/build-your-own-x">build-your-own-x</a></li>
+<li><a target="_blank" rel="noopener" href="https://websec.readthedocs.io/zh/latest/">websec</a></li>
+<li><a target="_blank" rel="noopener" href="https://learnopengl-cn.github.io/">learnopengl</a></li>
+<li><a target="_blank" rel="noopener" href="https://eli.thegreenplace.net/">Eli Bendersky’s website</a></li>
+<li><a target="_blank" rel="noopener" href="https://fabiensanglard.net/">FABIEN SANGLARD’S WEBSITE</a></li>
+</ul>
+<h2 id="一些复杂的东西"><a href="#一些复杂的东西" class="headerlink" title="一些复杂的东西"></a>一些复杂的东西</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/SerenityOS/serenity">serenity</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/klange/toaruos">toaruos</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.projectoberon.com/">Oberon</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/concurrencykit/ck">ck</a></li>
+<li><a target="_blank" rel="noopener" href="http://painterengine.com/index.html">painterengine</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.redox-os.org/">redox</a></li>
+</ul>
+<h2 id="一些秃顶的东西"><a href="#一些秃顶的东西" class="headerlink" title="一些秃顶的东西"></a>一些秃顶的东西</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/ossu/computer-science">computer-science</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/binhnguyennus/awesome-scalability">awesome-scalability</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/mhadidg/software-architecture-books">software-architecture-books</a></li>
+</ul>
+
+      </div>
+      
+      
+      
+    </div>
+
+    
+    
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ewing</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">38k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:20</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"piz-ewing/piz-ewing.github.io","issue_term":"pathname","theme":"github-light"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+
+</body>
+</html>

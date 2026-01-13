@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"piz-ewing.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="nt文件系统(1)--sfilter">
+<meta property="og:url" content="https://piz-ewing.github.io/2020/03/10/nt_driver_1/index.html">
+<meta property="og:site_name" content="ewing">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-03-10T08:49:00.000Z">
+<meta property="article:modified_time" content="2020-03-10T08:49:00.000Z">
+<meta property="article:author" content="ewing">
+<meta property="article:tag" content="nt driver">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://piz-ewing.github.io/2020/03/10/nt_driver_1/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://piz-ewing.github.io/2020/03/10/nt_driver_1/","path":"2020/03/10/nt_driver_1/","title":"nt文件系统(1)--sfilter"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>nt文件系统(1)--sfilter | ewing</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@next-theme/pjax@0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/pjax.js" defer></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.5.0/dist/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">ewing</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-explorer"><a href="/explorer/" rel="section"><i class="fa fa-binoculars fa-fw"></i>浏览</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="nav-number">2.</span> <span class="nav-text">基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A9%B1%E5%8A%A8%E7%A8%8B%E5%BA%8F%E7%9A%84%E5%9F%BA%E7%A1%80%E5%BC%80%E5%A7%8B"><span class="nav-number">2.1.</span> <span class="nav-text">驱动程序的基础开始</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B4%BE%E9%81%A3%E5%87%BD%E6%95%B0%E7%9A%84%E6%B3%A8%E5%86%8C"><span class="nav-number">2.2.</span> <span class="nav-text">派遣函数的注册</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FastIo"><span class="nav-number">2.3.</span> <span class="nav-text">FastIo</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%B7%E7%9A%84%E5%8A%A8%E6%80%81%E6%8C%82%E8%BD%BD"><span class="nav-number">3.</span> <span class="nav-text">卷的动态挂载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%B7%E8%AE%BE%E5%A4%87%E7%9A%84%E9%99%84%E5%8A%A0"><span class="nav-number">4.</span> <span class="nav-text">卷设备的附加</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%BB%E5%86%99%E8%BF%87%E6%BB%A4"><span class="nav-number">5.</span> <span class="nav-text">读写过滤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%BB%E8%AF%B7%E6%B1%82%E7%9A%84%E5%AE%8C%E6%88%90"><span class="nav-number">5.1.</span> <span class="nav-text">读请求的完成</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E5%92%8C%E7%9B%AE%E5%BD%95%E7%9A%84%E5%88%9B%E5%BB%BA%EF%BC%8C%E6%89%93%E5%BC%80%EF%BC%8C%E5%85%B3%E9%97%AD%EF%BC%8C%E5%88%A0%E9%99%A4"><span class="nav-number">6.</span> <span class="nav-text">文件和目录的创建，打开，关闭，删除</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B4%BE%E9%81%A3%E5%87%BD%E6%95%B0%E9%87%8D%E5%85%A5%E9%97%AE%E9%A2%98"><span class="nav-number">7.</span> <span class="nav-text">派遣函数重入问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">8.</span> <span class="nav-text">参考</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ewing"
+      src="https://avatars.githubusercontent.com/u/78925867?v=4">
+  <p class="site-author-name" itemprop="name">ewing</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/piz-ewing" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;piz-ewing" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:piz.ewing@gmail.com" title="E-Mail → mailto:piz.ewing@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://piz-ewing.github.io/2020/03/10/nt_driver_1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars.githubusercontent.com/u/78925867?v=4">
+      <meta itemprop="name" content="ewing">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ewing">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="nt文件系统(1)--sfilter | ewing">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          nt文件系统(1)--sfilter
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-03-10 08:49:00" itemprop="dateCreated datePublished" datetime="2020-03-10T08:49:00+00:00">2020-03-10</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>15 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><hr>
+<span id="more"></span>
+
+<hr>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>大抵了解了一下，最近驱动开发的招聘岗位依旧是对于文件系统过滤驱动和网络过滤驱动的需求。<br>一个主要是做文件透明加密，一个主要是做流量劫持。<br>关于这个驱动，文件过滤驱动稍微较网络过滤复杂一丢丢。<br>文件系统上面存在热插拔的U盘等介质，实际写法上和网络过滤驱动相接近。<br>本文主要参考解读《Windows 文件系统过滤驱动开发教程（第二版）》一文，<br>是对过滤驱动开发方面的总结性内容，也可以用作入门参考。</p>
+<h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h2><h3 id="驱动程序的基础开始"><a href="#驱动程序的基础开始" class="headerlink" title="驱动程序的基础开始"></a>驱动程序的基础开始</h3><p><code>DriverEntry</code> 相当于 <code>dllmain</code>，是一个驱动的入口，在驱动加载完成后由系统调用。<br>但是略有不同的是驱动程序除了入口之外还有一个独立的出口，在驱动被卸载的时候被调用，其位于驱动对象结构中，是一个函数指针。<br>至于为何要分开，我猜测是由于有些程序并不需要卸载处理，那么在 <code>DriverEntry</code> 在被调用完后，这个函数可以从内存中移除，节约一点内存。</p>
+<p>驱动在加载完成后，会由系统构造一个驱动对象传入 DriverEntry，它与驱动是一一对应关系。</p>
+<blockquote>
+<p>DriverObject 重要之处，在于它拥有一组函数指针，称为 dispatch functions.</p>
+</blockquote>
+<p>通常在编写过滤设备驱动时，需要做两件事。</p>
+<ul>
+<li>往目标设备的设备栈附加自己的设备对象，让自己的设备对象位于目标设备上层，用于接收处理IRP。</li>
+<li>当设备收到IRP后，就会交由其对应的驱动对象，而后调用驱动对象关联的派遣函数(dispatch functions)进行处理，所以需要编写对应的派遣函数。</li>
+</ul>
+<p>一个驱动对象可以包含多个设备对象，派遣函数的第一个参数会指明是来自于哪个设备对象，在此做相应的处理即可。</p>
+<p>创建设备对象通常使用 <code>IoCreateDevice</code> 函数，而附加设备对象到目标设备对象的设备栈通常使用  <code>IoAttachDevice</code> 函数。<br>在创建设备对象时，一般会将相关的信息存放于设备对象的扩展域即DEVICE_EXTENSION中，在附加完成后或者说准备工作完成后，需要通过 newDeviceObject-&gt;Flags &amp;&#x3D; ~DO_DEVICE_INITIALIZING 清理掉初始化标志，以表示设备可以正常工作。</p>
+<p>在文件系统中，通常需要关注的是卷设备对象的过滤，其涉及到对于文件的相关操作。</p>
+<p>宏 <code>UNREFERENCED_PARAMETER</code> 用于消除未使用的参数警告。</p>
+<h3 id="派遣函数的注册"><a href="#派遣函数的注册" class="headerlink" title="派遣函数的注册"></a>派遣函数的注册</h3><p>通常注册派遣函数的写法如下:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 首先全部初始化</span></span><br><span class="line"><span class="keyword">for</span> (i = <span class="number">0</span>; i &lt;= IRP_MJ_MAXIMUM_FUNCTION; i++)</span><br><span class="line">  DriverObject-&gt;MajorFunction[i] = SfPassThrough;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 然后特化处理</span></span><br><span class="line">DriverObject-&gt;MajorFunction[IRP_MJ_CREATE] = SfCreate;</span><br></pre></td></tr></table></figure>
+
+<p>其中 <code>PassThrough</code> 也有较为通用的写法:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">NTSTATUS <span class="title function_">SfPassThrough</span> <span class="params">(IN PDEVICE_OBJECT DeviceObject, IN PIRP Irp)</span> &#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 跳过当前设备栈，并移交给下层设备。</span></span><br><span class="line">  <span class="comment">// 如果是非过滤驱动，应该完成掉这个IRP请求，并指定错误码及相关信息</span></span><br><span class="line">  IoSkipCurrentIrpStackLocation( Irp );</span><br><span class="line">  <span class="keyword">return</span> IoCallDriver( ((PSFILTER_DEVICE_EXTENSION)DeviceObject-&gt;DeviceExtension)-&gt;AttachedToDeviceObject, Irp );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="FastIo"><a href="#FastIo" class="headerlink" title="FastIo"></a>FastIo</h3><blockquote>
+<p>FastIo 是 Cache Manager 调用所引发的一种没有 irp 的请求。</p>
+</blockquote>
+<p><code>FastIo</code>的结构指针位于<code>driver-&gt;FastIoDispatch</code>，需要自行分配一个 <code>FAST_IO_DISPATCH </code>并填充。</p>
+<p>在文件系统过滤驱动中，<code>FastIo</code>的过滤与 <code>IRP</code> 过滤同等重要，二者均可能被调用。</p>
+<blockquote>
+<p>在开发的初期学习阶段，你<strong>可以简单的设置所有的 fastio 例程返回 FALSE 并不做任何事。这样这些请求都会通过 IRP 重新发送被你的普通分发函数捕获</strong>。有一定的效率损失，但是并不是很大。</p>
+</blockquote>
+<blockquote>
+<p>3.5 附：陆麟关于 fastio 的简述<br>NT 下 FASTIO 是一套 IO MANAGER 与 DEVICE DRIVER 沟通的另外一套 API. 在进行基于 IRP 为基础的接 口调用前, IO MANAGER 会尝试使用 FAST IO 接口来加速各种 IO 操作. FASTIO 本身的文档并不多见, 本篇就是要 介绍一下 FASTIO 接口.</p>
+</blockquote>
+<blockquote>
+<ul>
+<li>FastIoCheckIfPossible, 此调用并不是 IO MANAGER 直接调用. 而是被 FsRtlXXX 系列函数调用. 用于确认读写 操作是否可以用 FASTIO 接口进行.</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>FastIoRead&#x2F;FastIoWrite, 很明显, 是读写处理的调用.</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>FastIoQueryBasicInfo&#x2F;FastIoQueryStandardInfo, 用于获取各种文件信息. 例如创建,修改日期等.</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>FastIoLock&#x2F;FastIoUnlockSingle&#x2F;FastIoUnlockAll&#x2F;FastIoUnlockAllByKey,用于对文件的锁定操作. 在 NT 中.有 2中锁定需要存在.1.排他性锁. 2.共享锁. 排他性锁在写操作前获取,不准其他进程获得写操作权限, 而共享锁 则代表需要读文件某区间. 禁止有写动作出现. 在同一地址上, 如果有多个共享锁请求, 那是被允许的.</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>FastIoDeviceControl 用于提供 NtDeviceIoControlFile 的支持.</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>AcquireFileForNtCreateSection&#x2F;ReleaseFileForNtCreateSection 是 NTFS 在映射文件内容到内存页面 前进行的操作.</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>FastIoDetachDevice, 当 REMOVABLE 介质被拿走后, FILE SYSTEM 的 DEVICE 对象会在任意的时刻被销 毁. 只有正确处理这个调用才能把上层 DEVICE 和将要销毁的 DEVICE 脱钩. 如果不解决这个函数, 系统会当.</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>FastIoQueryNetworkOpenInfo, 当 CIFS 也就是网上邻居,更准确的说是网络重定向驱动尝试获取文件信息, 会使用这个调用. 该调用是因为各种历史原因而产生. 当时设计 CIFS 时为避免多次在网上传输文件信息请求, 在 NT4 时 传输协议增加了一个 FileNetworkOpenInformation 的网络文件请求. 而 FSD 则增加了这个接口. 用于在一次操作 中获得所有的文件信息. 客户段发送 FileNetworkOpenInformation, 服务器端的 FSD 用本接口完成信息填写.</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>FastIoAcquireForModWrite, Modified Page Writer 会调用这个接口来获取文件锁. 如果实现这个接口. 则 能使得文件锁定范围减小到调用指定的范围. 不实现此接口, 整个文件被锁.</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>FastIoPrepareMdlWrite, FSD 提供 MDL. 以后向此 MDL 写入数据就代表向文件写入数据. 调用参数中有 FILE_BOJECT 描述要写的目标文件.</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>FastIoMdlWriteComplete, 写操作完成. FSD 回收 MDL.</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>FastIoReadCompressed, 当此调用被调用时, 读到的数据是压缩后的.应该兼容于标准的 NT 提供的压缩库. 因 为调用者负责解压缩.</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>FastIoWriteCompressed,当此调用被调用时, 可以将数据是压缩后存储.</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>FastIoMdlReadCompressed&#x2F;FastIoMdlReadCompleteCompressed, MDL 版本的压缩读. 当后一个接 口被调用时,MDL 必须被释放.</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>FastIoMdlWriteCompressed&#x2F;FastIoMdlWriteCompleteCompressed, MDL 版本的压缩写.当后一个接 口被调用时,MDL 必须被释放.</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>FastIoQueryOpen, 这不是打开文件的操作. 但是却提供了一个 IRP_MJ_CREATE 的 IRP. 我在以前版本的 SECUSTAR 的软件中错误地实现了功能. 这个操作是打开文件&#x2F;获取文件基本信息&#x2F;关闭文件的一个操作.</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>FastIoReleaseForModWrite,释放 FastIoAcquireForModWrite 调用所占有的 LOCK.</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>FastIoAcquireForCcFlush&#x2F;FastIoReleaseForCcFlush FsRtl 会调用此接口,在 LAZY WRITE 线程将要把修改后的文件数据写入前调用.获取文件锁.</li>
+</ul>
+</blockquote>
+<p>由于上面这些属于比较重要的内容，所以直接摘录过来了。</p>
+<h2 id="卷的动态挂载"><a href="#卷的动态挂载" class="headerlink" title="卷的动态挂载"></a>卷的动态挂载</h2><blockquote>
+<p>任何来自应用的请求，终被 windowsIO 管理器翻译成 irp 的，总是发送给设备栈的顶端那个设备。</p>
+</blockquote>
+<p>关于这个内容在前面已经说过了。</p>
+<p>当一个U盘被插入时，系统会动态的生成(挂载)一个卷(Volume)，<br>对于文件系统过滤驱动来说，当然希望能动态的识别并往这个新建的设备对象上层加入过滤设备对象。<br>这个时候就需要用到名为 <code>IoRegisterFsRegistrationChange</code> 的函数。</p>
+<p><code>IoRegisterFsRegistrationChange</code>本身并不能识别卷的创建(挂载)，它的功能是动态识别文件系统是否被激活，通过它就可以往激活的文件系统的控制设备对象附加一个过滤设备对象，进而得到发往这个文件系统的控制设备对象的IRP。</p>
+<p>一个卷在被挂载时，会产生一个发往文件系统的控制设备对象的IRP，其 Major Function Code 为 IRP_MJ_FILE_SYSTEM_CONTROL，Minor Function Code 为 IRP_MN_MOUNT。</p>
+<p>简单的说，就是两个步骤。</p>
+<ol>
+<li>IoRegisterFsRegistrationChange 注册一个回调，监视文件对象的激活和卸载，回调内完成 附加&#x2F;取消附加 文件系统控制设备对象</li>
+<li>为 MajorFunction[IRP_MJ_FILE_SYSTEM_CONTROL] 指定派遣函数，内部对 MinorFunction 为 IRP_MN_MOUNT 的进行 附加处理。</li>
+</ol>
+<p>在 <code>2000</code>以后的系统中，<code>IoRegisterFsRegistrationChange</code> 会重新枚举已经激活的文件系统，类似于调试子系统会重新将已经执行过的内容发往调试器，但是其不会重新发送卷挂载的 IRP，故需要自行枚举该文件系统下的卷设备并附加。</p>
+<p>按照 sfilter 的逻辑是不会重发卷挂载的 IRP，具体会不会发我不知道，只是多附加一次也不会出错，这是因为后面附加时可以统一枚举设备栈判断设备对象的扩展域是否为NULL来识别该设备栈是否已经附加。</p>
+<p>另外文件系统在激活时，并不是绑定所有设备，只需要绑定感兴趣的设备对象，可以通过 <code>DeviceObject-&gt;DeviceType</code> 进行过滤，以及通过驱动对象名过滤掉文件系统识别器(一个占坑的驱动)，一般情况下是在<code>\FileSystem\Fs_Rec</code>下面。</p>
+<p>由于 <code>DISMOUNT</code> 很难被捕获，在 <code>sfilter </code> 中并未进行相关的处理，会出现影响不大的泄露。</p>
+<p><code>IRP_MN_LOAD_FILE_SYSTEM</code> 是在文件系统识别器决定加载真正的文件系统时产生的请求，其中需要处理被误绑定的 文件系统识别器。由于 识别器路径不是必须为 <code>\FileSystem\Fs_Rec</code> 的缘故，所以可能会发生误绑定现象。</p>
+<h2 id="卷设备的附加"><a href="#卷设备的附加" class="headerlink" title="卷设备的附加"></a>卷设备的附加</h2><p>前面已经提及，文件系统过滤驱动中，真正需要处理是卷设备的行为过滤。<br><code>IRP_MN_MOUNT_VOLUME</code> 可以感知到将要被创建的卷设备，当挂载请求到来时，能得到一个 VPB 结构，它将磁盘设备对象和卷设备对象关联起来，但是卷设备实际是在请求完成之后才会被真正创建，而请求完成后下层的文件系统驱动可能已经修改了 VPB 的值，所以需要提前将其保存起来。在完成例程中去获取真正的卷设备。</p>
+<p>VPB-&gt;RealDevice是    磁盘驱动创建的物理设备对象<br>VPB-&gt;RealDevice      中又存在指向 VPB的指针，但是并不清楚 VPB 是否等于 VPB-&gt;RealDevice-&gt;VPB<br>VPB-&gt;DeviceObject是  文件系统创建的卷设备对象</p>
+<p>相当于先保存 VPB-&gt;RealDevice 磁盘设备对象，在请求完成后再通过 RealDevice-&gt;VPB-&gt;DeviceObject 获取卷设备对象。</p>
+<p>一种更通用的做法是将一个事件作为完成函数的上下文进行投递，再在其完成函数中激活，这样就能在其他地方感知到完成事件了，另外使用该方法也能绕开 IRQL级别的限制，另外在 2000上有个讨厌的死锁问题，可以通过 <code>DelayedWorkQueue</code> 委托，这里不细看了，基本上不会再为 2000 写驱动了。</p>
+<p><strong>值得注意的是</strong>：根据官方文档</p>
+<blockquote>
+<p>IoCompletion routine is called at IRQL &lt;&#x3D; DISPATCH_LEVEL</p>
+</blockquote>
+<p>完成例程可能运行于 DISPATCH_LEVEL，故 上下文(事件) 必须分配于 nonpaged memory，sfilter是直接分配于栈上，就我个人理解，内核栈是不会被交换的(否则运行这么多年早就错误百出了)。</p>
+<p>另外在附加前需要检查目标设备栈是否已经附加，sfilter中是遍历了整个设备栈，当然也可以只判断顶部那个(可能会遗漏)，判断其扩展域是否为 NULL就行了，可以利用宏 ARGUMENT_PRESENT。当然在检查附加及附加这段是需要同步的，在取消时同样。</p>
+<p>本文略过卷影部分。</p>
+<blockquote>
+<p>卷影拷贝服务(Volume Shadow Copy Service，VSS)是一种备份和恢复的技术。它是一种基于时间点来备份文件拷贝的技术，可以过滤也可以不过滤。</p>
+</blockquote>
+<h2 id="读写过滤"><a href="#读写过滤" class="headerlink" title="读写过滤"></a>读写过滤</h2><blockquote>
+<p>处理 IRP_MJ_READ 和 IRP_MJ_WRITE,能捕获文件的读写操作.</p>
+</blockquote>
+<p>在 sfilter 中并未对这些进行处理而集中 FastIO.</p>
+<blockquote>
+<p>LARGE_INTEGER offset; Offset.QuadPart &#x3D; irpsp-&gt;Parameters.Read.ByteOffset.QuadPart;<br>而读取文件的长度则是:<br>ULONG length; length &#x3D; irpsp-&gt;Parameters.Read.Length;<br>写的偏移量和长度则为:<br>Offset.QuadPart &#x3D; irpsp-&gt;Parameters.Write.ByteOffset.QuadPart;<br>length &#x3D; irpsp-&gt;Parameters.Write.Length;</p>
+</blockquote>
+<p>由于捕获这个请求的时候，请求还未完成，故无法获取到即将被读取的数据。</p>
+<blockquote>
+<p><strong>完成 Irp 的时候忽略还是拷贝当前 IO_STACK_LOCATION,返回什么 STATUS,以及完成函数中如何结束 Irp,是 不那么容易搞清楚的一件事情.我想做个总结如下:</strong></p>
+</blockquote>
+<blockquote>
+<p>1.如果对 irp 完成之后的事情无兴趣,直接忽略当前 IO_STACK_LOCATION,(对我们的程序来说,调用 IoSkipCurrentIrpStackLocation),然后向下传递请求,返回 IoCallDriver 所返回的状态.</p>
+</blockquote>
+<blockquote>
+<p>2.不但对 irp 完成之后的事情无兴趣,而且我不打算继续传递,打算立刻返回成功或失败.那么我不用忽略或者拷贝当前 IO_STACK_LOCATION,填写参数后调用 IoCompleteRequest,并返回我想返回的结果.</p>
+</blockquote>
+<blockquote>
+<p>3.如果对 irp 完成之后的事情有兴趣, 并打算在完成函数中处理, 应该首先拷贝当前 IO_STACK_LOCATION(IoCopyCurrentIrpStackLocationToNext), 然后指定完成函数, 并返回 IoCallDriver()所返回的 status.完成函数中,不需要调用 IoCompleteRequest!直接返回 Irp 的当前状态即可.</p>
+</blockquote>
+<blockquote>
+<p>4.同 3 的情况,有时候,会把任务塞入系统工作者线程或者希望在另外的线程中去完成 Irp,那么完成函数中应该返回 STATUS_MORE_PROCESSING_REQUIRED,此时完成 Irp 的时候应该调用 IoCompleteRequest.另一种类似 的情况是在 dispatch 函数中等待完成函数中设置事件, 那么完成函数返回 STATUS_MORE_PROCESSING_REQUIRED,dispatch 函数在等待结束后调用 IoCompleteRequest.</p>
+</blockquote>
+<p>关于IO的几种方式在先前的复习中已经总结了。<br>缓冲方式 直接方式 其他方式。</p>
+<p>其他方式需要在同一进程上下文环境才能处理，其他两种则没有这种限制。<br>根据设备对象的IO标志可以判断其IO方式。</p>
+<p>直接IO方式可通过判断 <code>Irp-&gt;MdlAddress</code> 是否NULL，并通过 <code>MmGetSystemAddressForMdl(Irp-&gt;MdlAddress);</code> 获取缓冲区地址。</p>
+<p>剩下两种只要保证进程上下文不变，可以直接从<code>Irp-&gt;UserBuffer</code>中获取缓冲区地址。</p>
+<p>读请求的buffer需要在请求完成时才能提取，而写请求则不需要。</p>
+<h3 id="读请求的完成"><a href="#读请求的完成" class="headerlink" title="读请求的完成"></a>读请求的完成</h3><p>略。</p>
+<h2 id="文件和目录的创建，打开，关闭，删除"><a href="#文件和目录的创建，打开，关闭，删除" class="headerlink" title="文件和目录的创建，打开，关闭，删除"></a>文件和目录的创建，打开，关闭，删除</h2><p>实际上重命名操作也可以归纳到一起。</p>
+<p>目录相关的处理老实说比较复杂，我就简单的说一下如何 过滤删除和重命名。</p>
+<p><code>FileDispositionInformation == Iopb-&gt;Parameters.SetFile.FileInformationClass</code><br><code>|| FileRenameInformation == Iopb-&gt;Parameters.SetFile.FileInformationClass</code><br>通过上面两条就能过滤出 删除和重命名操作了。<br>接着通过<br><code>IoGetCurrentIrpStackLocation(Irp)-&gt;ileObject-&gt;FileName</code><br>就能获得文件名，其类型为 UNICODE_STRING。<br>至于如何处理，就依需求了。</p>
+<h2 id="派遣函数重入问题"><a href="#派遣函数重入问题" class="headerlink" title="派遣函数重入问题"></a>派遣函数重入问题</h2><p>通常要避免重入造成的死循环。</p>
+<p>驱动开发中 由于内核栈的短缺，本身也应该避免递归造成的重入。<br>另一种是函数内部调用的某个函数会触发对应的IRP请求，又会回到该函数，而导致死循环。</p>
+<p>这实际上对程序逻辑理解上的疏忽造成的，通常并不会出现，如果有必要出现时，需要进行过滤。<br>同样也可以通过创建任务线程来处理，具体可以看本文参考文章的相关部分。</p>
+<p>##总结<br>本文主要结合《Windows 文件系统过滤驱动开发教程（第二版）》一文，介绍了<code>sfilter</code> 中的核心部分，并加入了一些个人见解。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="http://localhost/usr/uploads/2020/01/4020919378.pdf">Windows 文件系统过滤驱动开发教程（第二版）</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/nt-driver/" rel="tag"># nt driver</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/03/10/nt_driver_0/" rel="prev" title="nt驱动开发(0)--复习">
+                  <i class="fa fa-angle-left"></i> nt驱动开发(0)--复习
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/03/10/nt_driver_2/" rel="next" title="nt文件系统(2)--minifilter">
+                  nt文件系统(2)--minifilter <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ewing</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">38k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:20</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"piz-ewing/piz-ewing.github.io","issue_term":"pathname","theme":"github-light"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+
+</body>
+</html>

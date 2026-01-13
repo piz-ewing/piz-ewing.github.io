@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"piz-ewing.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="nt驱动开发(0)--复习">
+<meta property="og:url" content="https://piz-ewing.github.io/2020/03/10/nt_driver_0/index.html">
+<meta property="og:site_name" content="ewing">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-03-10T08:48:00.000Z">
+<meta property="article:modified_time" content="2020-03-10T08:48:00.000Z">
+<meta property="article:author" content="ewing">
+<meta property="article:tag" content="nt driver">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://piz-ewing.github.io/2020/03/10/nt_driver_0/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://piz-ewing.github.io/2020/03/10/nt_driver_0/","path":"2020/03/10/nt_driver_0/","title":"nt驱动开发(0)--复习"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>nt驱动开发(0)--复习 | ewing</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@next-theme/pjax@0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/pjax.js" defer></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.5.0/dist/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">ewing</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-explorer"><a href="/explorer/" rel="section"><i class="fa fa-binoculars fa-fw"></i>浏览</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E6%B1%87%E6%80%BB"><span class="nav-number">2.</span> <span class="nav-text">驱动开发汇总</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E4%BB%80%E4%B9%88%E6%98%AF%E9%A9%B1%E5%8A%A8%E7%A8%8B%E5%BA%8F"><span class="nav-number">2.1.</span> <span class="nav-text">1.什么是驱动程序?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E4%BB%80%E4%B9%88%E6%98%AF%E9%A9%B1%E5%8A%A8%E5%AF%B9%E8%B1%A1"><span class="nav-number">2.2.</span> <span class="nav-text">2.什么是驱动对象?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E4%BB%80%E4%B9%88%E6%98%AF%E8%AE%BE%E5%A4%87%E5%AF%B9%E8%B1%A1"><span class="nav-number">2.3.</span> <span class="nav-text">3.什么是设备对象?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E9%A9%B1%E5%8A%A8%E5%AF%B9%E8%B1%A1%E4%B8%8E%E8%AE%BE%E5%A4%87%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">2.4.</span> <span class="nav-text">4.驱动对象与设备对象的关系?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E5%87%A0%E7%A7%8DIO%E6%96%B9%E5%BC%8F%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">2.5.</span> <span class="nav-text">5.几种IO方式的区别?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-WDM%E9%A9%B1%E5%8A%A8"><span class="nav-number">2.6.</span> <span class="nav-text">6.WDM驱动?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E5%86%85%E6%A0%B8%E5%86%85%E5%AD%98"><span class="nav-number">2.7.</span> <span class="nav-text">7.内核内存?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-%E9%93%BE%E8%A1%A8"><span class="nav-number">2.8.</span> <span class="nav-text">8.链表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-%E8%BF%90%E8%A1%8C%E6%97%B6"><span class="nav-number">2.9.</span> <span class="nav-text">9.运行时</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-IRP"><span class="nav-number">2.10.</span> <span class="nav-text">10.IRP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-IRQL%E4%B8%8E%E9%94%81"><span class="nav-number">2.11.</span> <span class="nav-text">11.IRQL与锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-%E5%BC%82%E6%AD%A5%E6%93%8D%E4%BD%9C"><span class="nav-number">2.12.</span> <span class="nav-text">12.异步操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#13-StartIO"><span class="nav-number">2.13.</span> <span class="nav-text">13.StartIO</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#14-DPC-%E4%B8%8E-APC"><span class="nav-number">2.14.</span> <span class="nav-text">14.DPC 与 APC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#15-%E6%97%B6%E9%97%B4"><span class="nav-number">2.15.</span> <span class="nav-text">15.时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#16-%E5%AF%B9%E8%B1%A1"><span class="nav-number">2.16.</span> <span class="nav-text">16.对象</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ewing"
+      src="https://avatars.githubusercontent.com/u/78925867?v=4">
+  <p class="site-author-name" itemprop="name">ewing</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/piz-ewing" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;piz-ewing" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:piz.ewing@gmail.com" title="E-Mail → mailto:piz.ewing@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://piz-ewing.github.io/2020/03/10/nt_driver_0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars.githubusercontent.com/u/78925867?v=4">
+      <meta itemprop="name" content="ewing">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ewing">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="nt驱动开发(0)--复习 | ewing">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          nt驱动开发(0)--复习
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-03-10 08:48:00" itemprop="dateCreated datePublished" datetime="2020-03-10T08:48:00+00:00">2020-03-10</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><hr>
+<span id="more"></span>
+
+<hr>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在找工作，很久没有碰驱动的缘故，略生疏，遂复习一番。</p>
+<h2 id="驱动开发汇总"><a href="#驱动开发汇总" class="headerlink" title="驱动开发汇总"></a>驱动开发汇总</h2><h3 id="1-什么是驱动程序"><a href="#1-什么是驱动程序" class="headerlink" title="1.什么是驱动程序?"></a>1.什么是驱动程序?</h3><p>由应用层驱动，位于内核层与硬件设备打交道或对内核产生一定影响的程序称为驱动程序。</p>
+<h3 id="2-什么是驱动对象"><a href="#2-什么是驱动对象" class="headerlink" title="2.什么是驱动对象?"></a>2.什么是驱动对象?</h3><p>一个驱动程序的实例称为驱动对象，其在驱动程序加载时由对象管理器创建。<br><code>IoCallDriver</code> 调用驱动</p>
+<h3 id="3-什么是设备对象"><a href="#3-什么是设备对象" class="headerlink" title="3.什么是设备对象?"></a>3.什么是设备对象?</h3><p>设备对象保存设备特征和状态，在设备驱动程序中存在一个或多个设备对象。<br>另外在设备对象结构 _DEVICE_OBJECT 中存在 DeviceExtension , 其作用类似于重叠结构。<br><code>IoCreateDevice </code>              &#x2F;&#x2F; 创建一个设备<br><code>IoCreateDeviceSecure</code>         &#x2F;&#x2F; 同上，并支持任何用户直接打开设备字符，降低权限要求<br><code>IoGetDeviceObjectPointer</code>     &#x2F;&#x2F; 获取设备对象指针，会增加一个引用计数<br><code>IoAttachDeviceToDeviceStack</code> &#x2F;&#x2F; 挂载设备对象到设备栈<br><code>IoDetachDevice</code>              &#x2F;&#x2F; 卸载设备对象</p>
+<h3 id="4-驱动对象与设备对象的关系"><a href="#4-驱动对象与设备对象的关系" class="headerlink" title="4.驱动对象与设备对象的关系?"></a>4.驱动对象与设备对象的关系?</h3><p>一个驱动对象可以管理多个设备对象，<br>在派遣函数中，可以根据不同的设备对象做不同的处理，<br>另外与该设备相关的信息可以放在其扩展域中 <code>DeviceExtension</code>。</p>
+<h3 id="5-几种IO方式的区别"><a href="#5-几种IO方式的区别" class="headerlink" title="5.几种IO方式的区别?"></a>5.几种IO方式的区别?</h3><p><code>BUFFERED_IO</code> <code>DIRECT_IO</code> <code>OTHER_IO</code><br><code>BUFFERED_IO</code>  直接从用户空间拷贝到内核空间<br><code>DIRECT_IO</code>    使用mdl+锁的方式完成用户空间向内核空间的映射<br><code>其他方式读写</code> 当用户空间上下文一定时，可以直接读写用户空间，也就是非异步IO的典型</p>
+<h3 id="6-WDM驱动"><a href="#6-WDM驱动" class="headerlink" title="6.WDM驱动?"></a>6.WDM驱动?</h3><p>WDM中通常分为,物理设备对象和功能设备对象，二者为附加被附加关系。<br>总线驱动会自动创建物理设备对象，但此设备对象并不能被直接操作，需要在其上附加功能设备对象。</p>
+<h3 id="7-内核内存"><a href="#7-内核内存" class="headerlink" title="7.内核内存?"></a>7.内核内存?</h3><p>由于整个内核均位于同一片内存空间，故不宜开辟过大的空间，另外需要尽可能的避免递归调用带来的栈开销。<br><code>#pragma alloc_text(INIT, DriverEntry)</code><br><code>#pragma alloc_text(PAGE, SfFastIoRead)</code><br>等代码用于解决内存吃紧的情况<br>依据实际代码分为 <code>INIT</code> <code>PAGE</code></p>
+<p>指定函数加载到非分页内存中<br><code>#pragma LOCKEDCODE</code></p>
+<p>分配内存常用方法 – 加入 “tag” 可以便于调试不加tag的版本会使用默认tag<br><code>ExAllocPoolWithTag</code><br><code>ExFreePoolWithTag</code></p>
+<p>池化 - <code>Lookaside</code> 防止内存碎片，适合频繁分配且粒度固定的场景</p>
+<ul>
+<li><p>初始化一个 list, 指定分配器、释放器, 初始化相关锁<br><code>ExInitializeNPagedLookasideList</code><br><code>ExInitializePagedLookasideList</code></p>
+</li>
+<li><p>从list首部弹出元素，若为空，则使用分配器分配一块内存<br><code>ExAllocateFromPagedLookasideList</code><br><code>ExAllocateFromNPagedLookasideList</code></p>
+</li>
+<li><p>将一块内存挂载到指定 list，若达到 list最大深度则不挂载直接释放<br><code>ExFreeToPagedLookasideList</code><br><code>ExFreeToNPagedLookasideList</code></p>
+</li>
+<li><p>使用 <code>ExAllocateFromPagedLookasideList</code>&#x2F;<code>ExAllocateFromNPagedLookasideList</code> 迭代list，并调用指定释放器<br><code>ExDeleteNPagedLookasideList</code></p>
+</li>
+<li><p>内存可用性检测 – 不推荐使用<br><code>ProbeForRead</code><br><code>ProbeForWrite</code></p>
+</li>
+</ul>
+<h3 id="8-链表"><a href="#8-链表" class="headerlink" title="8.链表"></a>8.链表</h3><p>驱动中通常使用非侵入式的 双向链表，通常需要将 LIST_ENTRY 放入 Node 的首部，便于遍历<br><code>IsListEmpty(&amp;head)</code><br><code>InsertHeadList(&amp;head,&amp;node-&gt;ListEntry)</code><br><code>InsertTailList(&amp;head,&amp;node-&gt;ListEntry)</code><br><code>newhead = RemoveHeadList(&amp;head)</code></p>
+<p><code>CONTAINING_RECORD</code> 用于得到结构体地址</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> CONTAINING_RECORD(address, type, field) ((type FAR *)( \</span></span><br><span class="line"><span class="meta">                                          (PCHAR)(address) - \</span></span><br><span class="line"><span class="meta">                                          (PCHAR)(&amp;((type *)0)-&gt;field)))</span></span><br><span class="line"></span><br><span class="line">FIELD_OFFSET 计算成员偏移</span><br><span class="line"><span class="meta">#<span class="keyword">define</span> FIELD_OFFSET(type, field)    ((LONG)&amp;(((type *)0)-&gt;field))</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="9-运行时"><a href="#9-运行时" class="headerlink" title="9.运行时"></a>9.运行时</h3><p>大多数运行时函数可以直接使用，例如<br><code>memcpy</code> <code>memcmp</code> <code>memset</code> 等<br>也可以使用相应的 Rtl版本</p>
+<h3 id="10-IRP"><a href="#10-IRP" class="headerlink" title="10.IRP"></a>10.IRP</h3><p>当上层应用与驱动程序通信时，会由系统做语义翻译，转为IRP结构，类似调试系统中的包装。</p>
+<p>对于一般的IRP请求，可以选择跳过或者完成。<br><code>IoSkipCurrentIrpStackLocation</code>——–&#x2F;&#x2F; 宏<br><code>IoCopyCurrentIrpStackLocationToNext</code>–&#x2F;&#x2F; 主要涉及完成例程，下层堆栈执行完成例程后，会将IRP的控制权交付给本层堆栈<br><code>IoSetCompletionRoutine</code>—————&#x2F;&#x2F; 在设置完成例程后，需要通过 <code>KeWaitForSingleObject</code> 自行处理<br>—————————————–&#x2F;&#x2F;<code>STATUS_PENDING</code> &#x2F; 在完成例程中通过 <code>KeSetEvent</code> 设置事件<br>—————————————–&#x2F;&#x2F; 同时返回 <code>STATUS_MORE_PROCESSING_REQUIRED</code>，会暂停向上回卷<br>—————————————–&#x2F;&#x2F; 或者在完成例程中通过 <code>IoMarkIrpPending</code> 传播挂起状态<br>—————————————–&#x2F;&#x2F; 二者区别在于是否完成IRP请求，由于调用 <code>IoCallDriver</code> 后<br>—————————————–&#x2F;&#x2F; (异步操作时，立即返回 <code>STATUS_PENDING</code>) 失去了对IRP的控制<br>—————————————–&#x2F;&#x2F; 需要通过事件的方式重获控制然后完成IRP<br>—————————————–&#x2F;&#x2F;<br>—————————————–&#x2F;&#x2F; 另外可以在完成例程中通过 <code>IoCallDriver</code><br>—————————————–&#x2F;&#x2F; 继续转发，并返回 <code>STATUS_MORE_PROCESSING_REQUIRED</code><br>—————————————–&#x2F;&#x2F; 详细参考 《驱动开发详解》 第21章</p>
+<p><code>IoCompleteRequest</code>&#x2F;&#x2F; 函数</p>
+<p><code>IO_STACK_LOCATION</code> &#x2F;&#x2F; io堆栈</p>
+<p><code>IoMarkIrpPending</code> &#x2F;&#x2F; 挂起IRP<br><code>IoCancelIrp</code> &#x2F;&#x2F; 取消IRP</p>
+<p><code>IoSetCancelRoutine</code> &#x2F;&#x2F; 设置取消例程 -&gt; 需要注意在回调中调用 <code>IoReleaseCancleSpinLock(Irp-&gt;CancelIrql)</code>,取消自旋锁是全局自旋锁，所有驱动共用，只需要调用一次。</p>
+<p><code>IoAllocateIrp</code> &#x2F;&#x2F; 创建IRP</p>
+<h3 id="11-IRQL与锁"><a href="#11-IRQL与锁" class="headerlink" title="11.IRQL与锁"></a>11.IRQL与锁</h3><p>IRQL 软件使用了 0-2 3个级别，剩下的为硬件中断等级<br>由于中断例程也运行于 <code>DISPATCH_LEVEL</code>,故IRQL 为<code>DISPATCH_LEVEL</code>时执行的代码不能位于分页内存，且内部不能调用可能触发异常的代码。</p>
+<p>spin Lock<br><code>KeAcquiresSpinLock</code>             —–&gt; <code>KxWaitForSpinLockAndAcquire</code> (其内部就是通过nop自旋)&#x2F;<code>stdCall   _KeRaiseIrql, &lt;DISPATCH_LEVEL, esp&gt;</code> 提高运行级别<br><code>KeAcquireSpinLockAtDpcLevel</code>    —–&gt; 少了提升运行级别这一步</p>
+<p><code>KfReleaseSpinLock</code><br><code>KeReleaseSpinLockFromDpcLevel</code></p>
+<p>需要注意，<code>DISPATCH_LEVEL</code>并不意味着线程安全，在多核情况下依旧有用锁的必要。<br>另外需要注意，自旋锁是一种实时性较高但效率偏低的锁。</p>
+<p>快速互斥锁不可重入<br>另外部分同步对象可以在应用层和驱动层中交互</p>
+<p>另外可以使用 <code>ExInterLocked</code> 系列函数内部通过自旋锁实现需要提供自旋锁，同时不能操作分页内存<br><code>InterLocked</code> 系列不通过自旋锁，可以操作分页内存。</p>
+<h3 id="12-异步操作"><a href="#12-异步操作" class="headerlink" title="12.异步操作"></a>12.异步操作</h3><p>类似网络编程中的异步IO</p>
+<h3 id="13-StartIO"><a href="#13-StartIO" class="headerlink" title="13.StartIO"></a>13.StartIO</h3><p>实现IRP串行<br><code>StartIO</code> 例程位于 <code>DISPATCH_LEVEL</code> 级别，函数定义需要加上 <code>#pragma LOCKEDCODE</code> 保证其运行于非分页内存</p>
+<h3 id="14-DPC-与-APC"><a href="#14-DPC-与-APC" class="headerlink" title="14.DPC 与 APC"></a>14.DPC 与 APC</h3><p>延迟&#x2F;异步过程调用，运行在 <code>DISPATCH_LEVEL/APC_LEVEL</code> 级别，差异在于一个是全局的 一个是针对线程的</p>
+<p><code>KeInitializeDpc</code><br><code>KeInitializeApc</code></p>
+<p><code>KeInsertQueueApc</code><br><code>KeInsertQueueDpc</code></p>
+<h3 id="15-时间"><a href="#15-时间" class="headerlink" title="15.时间"></a>15.时间</h3><p>定时器<br><code>IoInitializeTimer</code> IO定时器<br><code>KeInitializeTimer</code> DPC定时器<br>二者的回调例程均运行于 <code>DISPATCH_LEVEL</code></p>
+<p>等待<br><code>KeWaitForSingleObject</code><br><code>KeDelayExecutionThread</code><br><code>KeStallExecutionProcessor</code> – 忙等待，类似自旋锁</p>
+<p>获取时间<br><code>KeQuerySystemTime</code></p>
+<h3 id="16-对象"><a href="#16-对象" class="headerlink" title="16.对象"></a>16.对象</h3><p><code>ObReferenceObjectByName</code> &#x2F;&#x2F; 获取命名对象指针，会增加引用计数</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>针对常见常用的概念，函数进行汇总说明。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>《windows驱动开发详解》 张帆</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/nt-driver/" rel="tag"># nt driver</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/01/10/yun_music_cryptor/" rel="prev" title="网易云音乐MP3地址解密">
+                  <i class="fa fa-angle-left"></i> 网易云音乐MP3地址解密
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/03/10/nt_driver_1/" rel="next" title="nt文件系统(1)--sfilter">
+                  nt文件系统(1)--sfilter <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ewing</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">38k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:20</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"piz-ewing/piz-ewing.github.io","issue_term":"pathname","theme":"github-light"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+
+</body>
+</html>

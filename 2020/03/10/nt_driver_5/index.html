@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"piz-ewing.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="nt网络过滤(5)--TDI过滤驱动">
+<meta property="og:url" content="https://piz-ewing.github.io/2020/03/10/nt_driver_5/index.html">
+<meta property="og:site_name" content="ewing">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://piz-ewing.github.io/2020/03/10/nt_driver_5/image-20221010190226699.png">
+<meta property="og:image" content="https://piz-ewing.github.io/2020/03/10/nt_driver_5/image-20221010190237106.png">
+<meta property="og:image" content="https://piz-ewing.github.io/2020/03/10/nt_driver_5/image-20221010190255459.png">
+<meta property="og:image" content="https://piz-ewing.github.io/2020/03/10/nt_driver_5/image-20221010190327813.png">
+<meta property="article:published_time" content="2020-03-10T08:53:00.000Z">
+<meta property="article:modified_time" content="2020-03-10T08:53:00.000Z">
+<meta property="article:author" content="ewing">
+<meta property="article:tag" content="nt driver">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://piz-ewing.github.io/2020/03/10/nt_driver_5/image-20221010190226699.png">
+
+
+<link rel="canonical" href="https://piz-ewing.github.io/2020/03/10/nt_driver_5/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://piz-ewing.github.io/2020/03/10/nt_driver_5/","path":"2020/03/10/nt_driver_5/","title":"nt网络过滤(5)--TDI过滤驱动"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>nt网络过滤(5)--TDI过滤驱动 | ewing</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@next-theme/pjax@0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/pjax.js" defer></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.5.0/dist/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">ewing</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-explorer"><a href="/explorer/" rel="section"><i class="fa fa-binoculars fa-fw"></i>浏览</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%88%86%E5%B1%82%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">网络分层模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TDI%E5%9C%A8%E5%93%AA"><span class="nav-number">3.</span> <span class="nav-text">TDI在哪?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TDI%E7%9B%B8%E5%85%B3%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91"><span class="nav-number">4.</span> <span class="nav-text">TDI相关驱动开发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP%E8%BF%87%E6%BB%A4%E2%80%93%E9%99%84%E5%8A%A0%E8%AE%BE%E5%A4%87"><span class="nav-number">5.</span> <span class="nav-text">TCP过滤–附加设备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP%E8%BF%87%E6%BB%A4%E2%80%93IRP%E8%AF%B7%E6%B1%82"><span class="nav-number">6.</span> <span class="nav-text">TCP过滤–IRP请求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ewing"
+      src="https://avatars.githubusercontent.com/u/78925867?v=4">
+  <p class="site-author-name" itemprop="name">ewing</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/piz-ewing" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;piz-ewing" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:piz.ewing@gmail.com" title="E-Mail → mailto:piz.ewing@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://piz-ewing.github.io/2020/03/10/nt_driver_5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars.githubusercontent.com/u/78925867?v=4">
+      <meta itemprop="name" content="ewing">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ewing">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="nt网络过滤(5)--TDI过滤驱动 | ewing">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          nt网络过滤(5)--TDI过滤驱动
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-03-10 08:53:00" itemprop="dateCreated datePublished" datetime="2020-03-10T08:53:00+00:00">2020-03-10</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><hr>
+<span id="more"></span>
+
+<hr>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>从本篇开始，将来聊一下网络过滤驱动。</p>
+<h2 id="网络分层模型"><a href="#网络分层模型" class="headerlink" title="网络分层模型"></a>网络分层模型</h2><p>在谈这个之前，要简单介绍一下网络分层模型。<br>常见的有 4，5，7层模型。</p>
+<img src="/2020/03/10/nt_driver_5/image-20221010190226699.png" class="" alt="image-20221010190226699">
+
+
+
+<img src="/2020/03/10/nt_driver_5/image-20221010190237106.png" class="" alt="image-20221010190237106">
+
+
+<p>在4层模型中，将数据链路层和物理层合并为了网络接口层。<br>一份数据要经由网络传递时，该数据会逐层包装成相应的协议格式提供给各方使用，在到达后又会逐层解包。</p>
+<p>之所以会这么做，是为了满足不同需求(有时候需要保证数据正确到达，有时不需要等等各类情况)，归根揭底的原因是网络硬件设备并不可靠，传输速度并不够快，所以需要协议来弥补这些缺陷，可以简单认为是硬件不够完美。</p>
+<p>其间每一层都肩负着各自的任务，用 <code>c++</code> 的话说，它们是继承关系，下面是父类上面是子类，一顺继承下去，各自又包含各自的方法和属性。</p>
+<p>具体可配合<code>RFC手册</code>，在 <code>wireshark</code> 中抓一个包来查看，本文只是为了建立这样一种概念。</p>
+<h2 id="TDI在哪"><a href="#TDI在哪" class="headerlink" title="TDI在哪?"></a>TDI在哪?</h2><img src="/2020/03/10/nt_driver_5/image-20221010190255459.png" class="" alt="image-20221010190255459">
+
+
+<p>本文所讲的 <code>TDI</code> 全称为 <code>Transport Driver Interface</code>，位于网络模型中的传输层，其分为3个部分，分别是 TDI客户驱动，TDI接口，以及TDI传输驱动。</p>
+<p>TDI接口是在联系TDI客户驱动和TDI传输驱动时所构建的一套函数，数据及宏定义。</p>
+<ul>
+<li>AFD.sys，NETBT.sys 和 Http.sys都是TDI 客户驱动。</li>
+<li>TCPIP.sys，NWLINK.sys和TCPIP6.sys都是TDI传输驱动。</li>
+<li>TDI.sys 一般视为为 TDI 接口驱动。</li>
+</ul>
+<p><strong>虽然TDI客户驱动一般在TDI传输驱动上层，但也有些TDI客户驱动在网络栈中逻辑上是和TDI传输驱动在同一层甚至在TDI传输驱动下层。</strong></p>
+<p>另外由于TDI层较为接近应用层，在TDI层过滤更为容易获得应用程序相关信息。</p>
+<h2 id="TDI相关驱动开发"><a href="#TDI相关驱动开发" class="headerlink" title="TDI相关驱动开发"></a>TDI相关驱动开发</h2><p>在做TDI相关开发时，一般分为以下两类</p>
+<ul>
+<li>调用 TDI 接口，在内核模式下进行网络编程</li>
+<li>针对指定传输层协议做网络流量过滤</li>
+</ul>
+<p>自 <code>Windows Vista</code> 起，微软为以上两大用途都提供了新的解决方案。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://blogs.msdn.microsoft.com/wndp/2006/02/24/introduction-to-winsock-kernel-wsk/">WSK</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/windows-hardware/drivers/network/windows-filtering-platform-callout-drivers2?redirectedfrom=MSDN">WFP</a></li>
+</ul>
+<p>本文要说明的内容便是 针对指定传输层协议做网络流量过滤 这一种使用方式。</p>
+<h2 id="TCP过滤–附加设备"><a href="#TCP过滤–附加设备" class="headerlink" title="TCP过滤–附加设备"></a>TCP过滤–附加设备</h2><p>要过滤 “TCP” 协议数据，需要附加到 <code>\Device\TCP</code> 所处的设备栈。<br>其在 <code>Windows Vista</code> 之前由 “tcpip.sys” 创建，<br>而之后的版本中则由 “tdx.sys” 创建。<br><code>TDX</code>是微软提供的一种妥协方案，旨在为旧TDI驱动提供兼容。</p>
+<img src="/2020/03/10/nt_driver_5/image-20221010190327813.png" class="" alt="image-20221010190327813">
+
+
+<p>笔者的电脑使用的<code>win10</code>，可以看到此时该设备由 <code>tdx</code> 创建。<br><strong>当然这些都不是重点，在附加的时候并不需要这个设备由哪个驱动创建。</strong></p>
+<p>既然是传统过滤驱动，要做的事情也很简单</p>
+<ol>
+<li>打开目标设备</li>
+<li>创建过滤设备附加到目标设备的设备栈</li>
+</ol>
+<p><strong>具体可以参考开源项目 <code>tdifw</code>。</strong></p>
+<h2 id="TCP过滤–IRP请求"><a href="#TCP过滤–IRP请求" class="headerlink" title="TCP过滤–IRP请求"></a>TCP过滤–IRP请求</h2><p>由于这类驱动中除了过滤用的设备，还有驱动本身和应用层通信的设备，所以要在派遣函数中分别处理。</p>
+<p>通常比较关注的是 <code>MajorFunction</code> <code>IRP_MJ_INTERNAL_DEVICE_CONTROL</code> 的请求，<br>其 <code>MinorFunction</code> 包含</p>
+<blockquote>
+<p>TDI_ACCEPT<br>TDI_LISTEN<br>TDI_CONNECT<br>TDI_SEND<br>TDI_RECEIVE<br>TDI_DISCONNECT<br>…</p>
+</blockquote>
+<p>可以过滤诸如 连接，收发等操作。</p>
+<p>在 IrpSp-&gt;Parameters 中存放着一个相关联的结构，通过该结构就能进一步提取信息，以此决定接下来的操作(例如禁止目标访问网络等),<br>可以挂起这个请求，也可以完成掉，又或者是继续下发，这点根据实际需求判断即可，在写法上，和其他传统过滤驱动并无太大的区别。</p>
+<p>具体的操作说明可到<code>MSDN</code>中查看。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/previous-versions/windows/hardware/network/ff565106%28v=vs.85%29">IRP_MJ_INTERNAL_DEVICE_CONTROL</a></li>
+</ul>
+<p>最后值得注意的是<br><strong>过滤驱动最好不要卸载，不然很容易BSOD，这是由于无法判断(或者很难判断)是否还存在某线程在执行当前驱动的派遣函数</strong></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文概括TDI过滤驱动的基础实现及相关知识。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/nt-driver/" rel="tag"># nt driver</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/03/10/nt_driver_4/" rel="prev" title="nt驱动开发(4)--虚拟磁盘及磁盘过滤">
+                  <i class="fa fa-angle-left"></i> nt驱动开发(4)--虚拟磁盘及磁盘过滤
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/03/10/nt_driver_6/" rel="next" title="nt网络过滤(6)--WFP">
+                  nt网络过滤(6)--WFP <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ewing</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">38k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:20</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"piz-ewing/piz-ewing.github.io","issue_term":"pathname","theme":"github-light"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+
+</body>
+</html>

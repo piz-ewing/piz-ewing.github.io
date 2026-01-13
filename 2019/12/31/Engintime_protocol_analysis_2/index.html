@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"piz-ewing.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="坚决抵制盗版行为，本文仅作 OSX 软件逆向分析及 OSX 软件安全相关的研究目的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Engintime系列逆向分析(2)--SMC与3DES">
+<meta property="og:url" content="https://piz-ewing.github.io/2019/12/31/Engintime_protocol_analysis_2/index.html">
+<meta property="og:site_name" content="ewing">
+<meta property="og:description" content="坚决抵制盗版行为，本文仅作 OSX 软件逆向分析及 OSX 软件安全相关的研究目的。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://piz-ewing.github.io/2019/12/31/Engintime_protocol_analysis_2/image-20221010174819713.png">
+<meta property="og:image" content="https://piz-ewing.github.io/2019/12/31/Engintime_protocol_analysis_2/image-20221010174851144.png">
+<meta property="og:image" content="https://piz-ewing.github.io/2019/12/31/Engintime_protocol_analysis_2/image-20221010174907369.png">
+<meta property="og:image" content="https://piz-ewing.github.io/2019/12/31/Engintime_protocol_analysis_2/image-20221010174918846.png">
+<meta property="og:image" content="https://piz-ewing.github.io/2019/12/31/Engintime_protocol_analysis_2/image-20221010174939715.png">
+<meta property="og:image" content="https://piz-ewing.github.io/2019/12/31/Engintime_protocol_analysis_2/image-20221010175027323.png">
+<meta property="og:image" content="https://piz-ewing.github.io/2019/12/31/Engintime_protocol_analysis_2/image-20221010175039491.png">
+<meta property="og:image" content="https://piz-ewing.github.io/2019/12/31/Engintime_protocol_analysis_2/image-20221010175151284.png">
+<meta property="article:published_time" content="2019-12-31T18:19:00.000Z">
+<meta property="article:modified_time" content="2019-12-31T18:19:00.000Z">
+<meta property="article:author" content="ewing">
+<meta property="article:tag" content="crack protocol_analysis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://piz-ewing.github.io/2019/12/31/Engintime_protocol_analysis_2/image-20221010174819713.png">
+
+
+<link rel="canonical" href="https://piz-ewing.github.io/2019/12/31/Engintime_protocol_analysis_2/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://piz-ewing.github.io/2019/12/31/Engintime_protocol_analysis_2/","path":"2019/12/31/Engintime_protocol_analysis_2/","title":"Engintime系列逆向分析(2)--SMC与3DES"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Engintime系列逆向分析(2)--SMC与3DES | ewing</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@next-theme/pjax@0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/pjax.js" defer></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.5.0/dist/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">ewing</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-explorer"><a href="/explorer/" rel="section"><i class="fa fa-binoculars fa-fw"></i>浏览</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9D%9A%E5%86%B3%E6%8A%B5%E5%88%B6%E7%9B%97%E7%89%88%E8%A1%8C%E4%B8%BA%EF%BC%8C%E6%9C%AC%E6%96%87%E4%BB%85%E4%BD%9C-OSX-%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E5%88%86%E6%9E%90%E5%8F%8A-OSX-%E8%BD%AF%E4%BB%B6%E5%AE%89%E5%85%A8%E7%9B%B8%E5%85%B3%E7%9A%84%E7%A0%94%E7%A9%B6%E7%9B%AE%E7%9A%84%E3%80%82"><span class="nav-number">1.</span> <span class="nav-text">坚决抵制盗版行为，本文仅作 OSX 软件逆向分析及 OSX 软件安全相关的研究目的。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">2.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%94%99%E5%9C%A8%E5%93%AA%E9%87%8C"><span class="nav-number">3.</span> <span class="nav-text">错在哪里</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E5%BC%82%E5%B8%B8%E6%88%90%E5%9B%A0"><span class="nav-number">4.</span> <span class="nav-text">分析异常成因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3DES"><span class="nav-number">5.</span> <span class="nav-text">3DES</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3%E5%99%A8"><span class="nav-number">6.</span> <span class="nav-text">暴力破解器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A0%B4%E8%A7%A3%E6%80%9D%E8%B7%AF"><span class="nav-number">7.</span> <span class="nav-text">破解思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">8.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ewing"
+      src="https://avatars.githubusercontent.com/u/78925867?v=4">
+  <p class="site-author-name" itemprop="name">ewing</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/piz-ewing" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;piz-ewing" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:piz.ewing@gmail.com" title="E-Mail → mailto:piz.ewing@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://piz-ewing.github.io/2019/12/31/Engintime_protocol_analysis_2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars.githubusercontent.com/u/78925867?v=4">
+      <meta itemprop="name" content="ewing">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ewing">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Engintime系列逆向分析(2)--SMC与3DES | ewing">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Engintime系列逆向分析(2)--SMC与3DES
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-12-31 18:19:00" itemprop="dateCreated datePublished" datetime="2019-12-31T18:19:00+00:00">2019-12-31</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.4k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>5 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="坚决抵制盗版行为，本文仅作-OSX-软件逆向分析及-OSX-软件安全相关的研究目的。"><a href="#坚决抵制盗版行为，本文仅作-OSX-软件逆向分析及-OSX-软件安全相关的研究目的。" class="headerlink" title="坚决抵制盗版行为，本文仅作 OSX 软件逆向分析及 OSX 软件安全相关的研究目的。"></a><strong>坚决抵制盗版行为，本文仅作 OSX 软件逆向分析及 OSX 软件安全相关的研究目的。</strong></h2><span id="more"></span>
+
+<hr>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>上一篇中，分析到了 <code>json</code> 内容错误这里，<br>接下来就需要具体去探索为何会错误了。</p>
+<h2 id="错在哪里"><a href="#错在哪里" class="headerlink" title="错在哪里"></a>错在哪里</h2><p>回到 <code>Engintime OS Lab</code> ，在结束进程相关函数(<code>ExitProcess</code> <code>TerminateProcess</code> 等)上面下断点，<br>可以看出并不是程序主动退出，那么可能的原因是异常无法处理而退出的，通过对退出时的栈信息进行判断可以证明这一点。</p>
+<p>可惜的是，我用的这个版本的 <code>od</code> 无论怎么关闭忽略异常都不会接管，所以暂时换了<code>vs</code>的调试器。</p>
+<img src="/2019/12/31/Engintime_protocol_analysis_2/image-20221010174819713.png" class="" alt="image-20221010174819713">
+
+<p>另外，此程序并未启用随机基址，故这个地址是不变的。</p>
+<blockquote>
+<p>0x00633E32</p>
+</blockquote>
+<h2 id="分析异常成因"><a href="#分析异常成因" class="headerlink" title="分析异常成因"></a>分析异常成因</h2><p>IDA 查看之</p>
+<img src="/2019/12/31/Engintime_protocol_analysis_2/image-20221010174851144.png" class="" alt="image-20221010174851144">
+
+<p>可以得到以下信息</p>
+<blockquote>
+<ol>
+<li>异常位于数据段</li>
+<li>在异常代码片段之前是正常代码片段</li>
+<li>从 CODE XREF(交叉引用来看) 是从 sub_634B40+435↓p 处正常调用到此处</li>
+</ol>
+</blockquote>
+<p>od动态看一下</p>
+<img src="/2019/12/31/Engintime_protocol_analysis_2/image-20221010174907369.png" class="" alt="image-20221010174907369">
+
+<img src="/2019/12/31/Engintime_protocol_analysis_2/image-20221010174918846.png" class="" alt="image-20221010174918846">
+
+<p>在函数  <code>sub_460320</code> 调用前后，异常内容发生了变换，<br>初步猜测，函数  <code>sub_460320</code> 会改变即将执行的内容即解密。</p>
+<p>为了看的清晰一些，使用了 <code>IDA</code> 的 <code>Hex-Rays Decompiler</code> 插件，俗称 <code>F5</code>插件。</p>
+<img src="/2019/12/31/Engintime_protocol_analysis_2/image-20221010174939715.png" class="" alt="image-20221010174939715">
+
+
+<p>得到如下结论</p>
+<blockquote>
+<ol>
+<li>retaddr 即返回地址是参数的一部分</li>
+<li>retaddr 的前4个字节不为 0x48404840 时，进行解密</li>
+<li>解密完成后 前8个字节为 0x48404840 0x48404840</li>
+</ol>
+</blockquote>
+<p>这是典型的 <code>SMC加密</code> 方式。</p>
+<p>##SMC加密</p>
+<blockquote>
+<p>SMC是一种局部代码加密技术，通过对一段代码进行加密来达到增加逆向工程难度或者免杀的目的。</p>
+</blockquote>
+<p>具体的内容，网上一搜到处都是。<br><strong>参考</strong></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/PandaOS/article/details/46575441">VC实现SMC加密技术_PandaOS的博客-CSDN博客</a></li>
+</ul>
+<p>这种加密有个特点，就是静态<code>key</code>，一旦<code>key</code>被<code>dump</code>出来了，这个软件就能被共享出去。</p>
+<p>通常情况下，这个<code>key</code>，必须要授权才能得到，也有例外情况。</p>
+<p>接下来重点就是看 <code>sub_5E6550</code> 的行为</p>
+<img src="/2019/12/31/Engintime_protocol_analysis_2/image-20221010175027323.png" class="" alt="image-20221010175027323">
+
+<p>通过动态观察其参数，又能得到如下信息</p>
+<blockquote>
+<p>retaddr 的4-8字节中存放有待解密长度，解密块从长度之后开始计数<br>最后一个参数中存放着先前<code>clientauthorizedcode</code>返回的<code>json</code>中的 [0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5]。</p>
+</blockquote>
+<img src="/2019/12/31/Engintime_protocol_analysis_2/image-20221010175039491.png" class="" alt="image-20221010175039491">
+
+<p>通过对比置换表等特征，可以确定是 <code>3des</code> 加密，<br>我并未具体分析<code>sub_5E6550</code>如何实现，<br>只是根据行为进行推断，这点会影响后面破解器的编写。</p>
+<h2 id="3DES"><a href="#3DES" class="headerlink" title="3DES"></a>3DES</h2><blockquote>
+<p>3DES（或称为Triple DES）是三重数据加密算法（TDEA，Triple Data Encryption Algorithm）块密码的通称。</p>
+</blockquote>
+<p><strong>参考</strong></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/ebcce1beafaf" title="对称加密算法：DES、3DES">对称加密算法：DES、3DES</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/yudansan/3des">github: 3des</a></li>
+</ul>
+<p>由于是用3des 做的 SMC加密，老实说比较没辙，就算知道<br><code>明文</code>  <code>密钥长度</code> <code>密文</code><br>还是无法求得密钥，那么就避免不了需要穷举了(<strong>最少我不知道如何求解</strong>)。</p>
+<p>通过对能成功运行的 <code>CP Lab</code> 对比分析，还原了异常代码片段</p>
+<img src="/2019/12/31/Engintime_protocol_analysis_2/image-20221010175151284.png" class="" alt="image-20221010175151284">
+
+<p><strong>由于程序多处进行了加密，故还原一处并无大用，但是可以写出一个破解器。</strong></p>
+<h2 id="暴力破解器"><a href="#暴力破解器" class="headerlink" title="暴力破解器"></a>暴力破解器</h2><p>这个暴力破解器有两种写法</p>
+<ol>
+<li>提取出加密数据，外部自行使用 <code>3des</code>库，同时需要还原解密逻辑</li>
+<li>直接注入程序，调用程序原有的解密程序</li>
+</ol>
+<p>由于我不想在这个东西上浪费时间，通常来说，暴力破解是非常耗时间的，这里我只给出第二种写法的验证算法，这种写法的好处在于，我不用管它内部是怎么样加密变换的，只需要知道</p>
+<blockquote>
+<p>加密块 + 加密密钥 + 解密入口 &#x3D; 解密块</p>
+</blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 经过修改的验证算法，调用原程序的解密算法，并修改 retaddr 为指定的加密块起始地址</span></span><br><span class="line"><span class="function"><span class="type">int</span>  <span class="title">sub_460320</span><span class="params">(<span class="type">char</span>* key, <span class="type">char</span>* start)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> v1; <span class="comment">// ebx</span></span><br><span class="line">    <span class="type">char</span>* v2; <span class="comment">// esi</span></span><br><span class="line">    <span class="type">int</span> v3; <span class="comment">// [esp+10h] [ebp-2Ch]</span></span><br><span class="line">    <span class="type">char</span>* v4; <span class="comment">// [esp+28h] [ebp-14h]</span></span><br><span class="line">    DWORD* v5; <span class="comment">// [esp+2Ch] [ebp-10h]</span></span><br><span class="line">    <span class="type">int</span> v6; <span class="comment">// [esp+38h] [ebp-4h]</span></span><br><span class="line">    <span class="type">void</span>* retaddr = start; <span class="comment">// [esp+40h] [ebp+4h]</span></span><br><span class="line">    <span class="type">int</span> retv = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    v4 = (<span class="type">char</span>*)key;</span><br><span class="line">    v5 = (DWORD*)retaddr;</span><br><span class="line">    v1 = *(DWORD*)retaddr;</span><br><span class="line">    <span class="keyword">if</span> (*(DWORD*)retaddr != <span class="number">0x48404840</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        v2 = (<span class="type">char</span>*)*((DWORD*)retaddr + <span class="number">1</span>); <span class="comment">// 168</span></span><br><span class="line">        __asm &#123;</span><br><span class="line">            lea ecx, v3</span><br><span class="line">            mov eax, <span class="number">0x005E5CF0</span></span><br><span class="line">            call eax</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        v6 = <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> cret = (<span class="type">int</span>)retaddr + <span class="number">8</span>; <span class="comment">// 31</span></span><br><span class="line">        __asm &#123;</span><br><span class="line">            lea ecx, v3</span><br><span class="line">            push v4</span><br><span class="line">            push v2</span><br><span class="line">            push cret</span><br><span class="line">            push v2</span><br><span class="line">            push cret</span><br><span class="line">            mov eax, <span class="number">0x005E6550</span></span><br><span class="line">            call eax</span><br><span class="line">            mov retv, eax</span><br><span class="line">        &#125;</span><br><span class="line">        *v5 = <span class="number">0x48404840</span>;</span><br><span class="line">        v5[<span class="number">1</span>] = <span class="number">0x48404840</span>;</span><br><span class="line">        v5 = (DWORD*)((<span class="type">char</span>*)retaddr + v1 + <span class="number">8</span>);</span><br><span class="line">        *v5 = <span class="number">0x48404840</span>;</span><br><span class="line">        v5[<span class="number">1</span>] = <span class="number">0x48404840</span>;</span><br><span class="line">        __asm &#123;</span><br><span class="line">            lea ecx, v3</span><br><span class="line">            mov eax, <span class="number">0x005E5D00</span></span><br><span class="line">            call eax</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> retv;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> COPYSIZE (0x178)</span></span><br><span class="line"><span class="type">char</span> memencode[COPYSIZE] = &#123; <span class="number">0</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">verify</span><span class="params">(<span class="type">char</span>* key, <span class="type">int</span> keylen)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">memcpy</span>(memencode, (<span class="type">char</span>*)<span class="number">0x00633E29</span>, COPYSIZE);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">sub_460320</span>(key, memencode);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 输出解密结果</span></span><br><span class="line">    <span class="comment">// Write2Con(&quot;[+] ---- Key ----\r\n&quot;);</span></span><br><span class="line">    <span class="comment">// Write2Con(PrintBuffer(key, keylen));</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Write2Con(&quot;[+] ---- decode ----\r\n&quot;);</span></span><br><span class="line">    <span class="comment">// Write2Con(PrintBuffer(memencode, 0x50));</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>需要注意，以上代码并不是真正的破解器，只是简单验证算法，<br>其效率低下，如果感兴趣，可以根据逻辑自行优化。</p>
+<h2 id="破解思路"><a href="#破解思路" class="headerlink" title="破解思路"></a>破解思路</h2><p>方案一:<br>通过其他渠道获取到正确的 <code>3dskey</code></p>
+<p>方案二:<br>将已知可用(已解密)的<code>exe以dll方式加载</code>到目标进程内存，<br><code>hook解密函数</code>，根据<code>特征码</code>，匹配到指定已解密函数，并跳转到已解密函数继续执行，<br>需要在解密函数到达时<code>动态提取</code>特征码并匹配。<br>难点在于特征的动态提取。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>通过逐层分析，已经对该系列软件的验证方式得到了一个较为具体的理解。</p>
+<p>现在知道了，该系列的部分不需要正确的 <code>3dskey</code> 能正常工作，部分则需要，以及这个<code>key</code>的作用。<br>下一篇中，将写出一个较为通用的工具，也算是对整个逆向过程的总结。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/crack-protocol-analysis/" rel="tag"># crack protocol_analysis</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2019/12/30/Engintime_protocol_analysis/" rel="prev" title="Engintime系列逆向分析(1)--协议分析">
+                  <i class="fa fa-angle-left"></i> Engintime系列逆向分析(1)--协议分析
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2019/12/31/Engintime_protocol_analysis_3/" rel="next" title="Engintime系列逆向分析(3)--工具开发">
+                  Engintime系列逆向分析(3)--工具开发 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ewing</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">38k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:20</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"piz-ewing/piz-ewing.github.io","issue_term":"pathname","theme":"github-light"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+
+</body>
+</html>

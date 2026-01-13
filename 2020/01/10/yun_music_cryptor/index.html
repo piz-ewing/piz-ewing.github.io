@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"piz-ewing.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="网易云音乐MP3地址解密">
+<meta property="og:url" content="https://piz-ewing.github.io/2020/01/10/yun_music_cryptor/index.html">
+<meta property="og:site_name" content="ewing">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://piz-ewing.github.io/2020/01/10/yun_music_cryptor/image-20221010180900107.png">
+<meta property="og:image" content="https://piz-ewing.github.io/2020/01/10/yun_music_cryptor/image-20221010180914111.png">
+<meta property="og:image" content="https://piz-ewing.github.io/2020/01/10/yun_music_cryptor/image-20221010181116980.png">
+<meta property="article:published_time" content="2020-01-10T11:24:00.000Z">
+<meta property="article:modified_time" content="2020-01-10T11:24:00.000Z">
+<meta property="article:author" content="ewing">
+<meta property="article:tag" content="protocol_analysis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://piz-ewing.github.io/2020/01/10/yun_music_cryptor/image-20221010180900107.png">
+
+
+<link rel="canonical" href="https://piz-ewing.github.io/2020/01/10/yun_music_cryptor/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://piz-ewing.github.io/2020/01/10/yun_music_cryptor/","path":"2020/01/10/yun_music_cryptor/","title":"网易云音乐MP3地址解密"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>网易云音乐MP3地址解密 | ewing</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@next-theme/pjax@0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/pjax.js" defer></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.5.0/dist/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">ewing</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-explorer"><a href="/explorer/" rel="section"><i class="fa fa-binoculars fa-fw"></i>浏览</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%91%E9%9F%B3%E4%B9%90MP3%E5%9C%B0%E5%9D%80%E5%88%86%E6%9E%90"><span class="nav-number">2.</span> <span class="nav-text">云音乐MP3地址分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E8%AF%B7%E6%B1%82"><span class="nav-number">2.1.</span> <span class="nav-text">分析请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E5%8A%A0%E8%A7%A3%E5%AF%86"><span class="nav-number">2.2.</span> <span class="nav-text">分析加解密</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8Ejs%E5%88%B0python"><span class="nav-number">3.</span> <span class="nav-text">从js到python</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E6%96%87%E4%BB%B6%EF%BC%8C%E5%86%99%E4%B8%80%E4%B8%AA%E5%B8%A6%E6%B5%8B%E8%AF%95%E7%9A%84%E7%B1%BB"><span class="nav-number">3.1.</span> <span class="nav-text">创建文件，写一个带测试的类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E5%86%99-AES-%E5%8F%8A%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95"><span class="nav-number">3.2.</span> <span class="nav-text">编写 AES 及测试方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E5%86%99-RSA-%E5%8F%8A%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95"><span class="nav-number">3.3.</span> <span class="nav-text">编写 RSA 及测试方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%84%E9%80%A0body"><span class="nav-number">3.4.</span> <span class="nav-text">构造body</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8Ejs%E5%88%B0c"><span class="nav-number">4.</span> <span class="nav-text">从js到c++</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#vcpkg"><span class="nav-number">4.1.</span> <span class="nav-text">vcpkg</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cryptopp-%E4%B8%8E-cpr"><span class="nav-number">4.2.</span> <span class="nav-text">cryptopp 与 cpr</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E5%86%99%E5%8A%A0%E8%A7%A3%E5%AF%86%E9%80%BB%E8%BE%91"><span class="nav-number">4.3.</span> <span class="nav-text">编写加解密逻辑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E5%86%99%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9D%97"><span class="nav-number">4.4.</span> <span class="nav-text">编写网络模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E5%86%99%E6%B5%8B%E8%AF%95"><span class="nav-number">4.5.</span> <span class="nav-text">编写测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#main-%E5%92%8C-config"><span class="nav-number">4.6.</span> <span class="nav-text">main 和 config</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%A5%E5%85%85"><span class="nav-number">4.7.</span> <span class="nav-text">补充</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B6%9F%E5%9D%91-cpp-netlib"><span class="nav-number">4.8.</span> <span class="nav-text">趟坑 cpp-netlib</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ewing"
+      src="https://avatars.githubusercontent.com/u/78925867?v=4">
+  <p class="site-author-name" itemprop="name">ewing</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/piz-ewing" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;piz-ewing" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:piz.ewing@gmail.com" title="E-Mail → mailto:piz.ewing@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://piz-ewing.github.io/2020/01/10/yun_music_cryptor/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars.githubusercontent.com/u/78925867?v=4">
+      <meta itemprop="name" content="ewing">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ewing">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="网易云音乐MP3地址解密 | ewing">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          网易云音乐MP3地址解密
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-01-10 11:24:00" itemprop="dateCreated datePublished" datetime="2020-01-10T11:24:00+00:00">2020-01-10</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>11 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><hr>
+<span id="more"></span>
+
+<hr>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在改博客的音乐插件时，发现其是向<br><code>https://api.i-meto.com/meting/api</code><br>查询网易的mp3地址，考虑到它不刷 <code>listid</code> 缓存，以后可能会有自己实现的需求，遂对网易云音乐分析了一番。</p>
+<h2 id="云音乐MP3地址分析"><a href="#云音乐MP3地址分析" class="headerlink" title="云音乐MP3地址分析"></a>云音乐MP3地址分析</h2><h3 id="分析请求"><a href="#分析请求" class="headerlink" title="分析请求"></a>分析请求</h3><p>打开 <code>fiddler</code> 抓一组包，很容易找到包含音乐地址的包。</p>
+<img src="/2020/01/10/yun_music_cryptor/image-20221010180900107.png" class="" alt="image-20221010180900107">
+
+<p>得到获取地址的接口为<br><code>https://music.163.com/weapi/song/enhance/player/url/v1?csrf_token=</code></p>
+<p>简单分析请求之后，得到一组最简洁的请求格式</p>
+<img src="/2020/01/10/yun_music_cryptor/image-20221010180914111.png" class="" alt="image-20221010180914111">
+
+<p>这里使用的 <code>vscode</code> 的 <a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=humao.rest-client">REST Client</a> 插件。</p>
+<p>观察POST数据包的 body 部分，疑似加密，前半部分是典型的 <code>urlencode</code> + <code>Base64</code> (%30%30)解开是二进制，后半部分直接是二进制。</p>
+<p><code>encSecKey</code>将成为一个突破口。</p>
+<h3 id="分析加解密"><a href="#分析加解密" class="headerlink" title="分析加解密"></a>分析加解密</h3><p>打开浏览器的 开发人员工具 (F12), 全局搜索(<code>ctrl + shift + f</code>) <code>encSecKey</code>，找到全部与之相关的js，</p>
+<p><code>format</code> 一下，全部下断点，实际上正常应该分析一下上下文，但是总共就 <code>3,4</code> 处，直接全断最方便了。</p>
+<p>刷新网页，会断到 <code>core_xxxxxxxxxxxxx.js</code> 中名为 <code> function d(d, e, f, g)</code> 的函数，虽然名称被混淆了，<br>但是这里确实是加密。<br>当然为了验证是否是前面那个接口用到的加密，还需要往后跟到发包函数，多看几组包就能确定了。<br>这个过程我已经做了，由于篇幅问题，不再多说。</p>
+<p>拓展一下，不从<code>encSecKey</code>分析也是可以的，搜 <code>csrf_token</code> 下断点，往上回溯几层，<br>你会跟到 <code>window.asrsea = d</code>，实际上拿 <code> window.asrsea</code> 去百度搜会发现有人写过类似的文章了。</p>
+<p>函数很短就整个提过来了</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">!<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">a</span>(<span class="params">a</span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> d, e, b = <span class="string">&quot;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789&quot;</span>, c = <span class="string">&quot;&quot;</span>;</span><br><span class="line">        <span class="keyword">for</span> (d = <span class="number">0</span>; a &gt; d; d += <span class="number">1</span>)</span><br><span class="line">            e = <span class="title class_">Math</span>.<span class="title function_">random</span>() * b.<span class="property">length</span>,</span><br><span class="line">            e = <span class="title class_">Math</span>.<span class="title function_">floor</span>(e),</span><br><span class="line">            c += b.<span class="title function_">charAt</span>(e);</span><br><span class="line">        <span class="keyword">return</span> c</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">b</span>(<span class="params">a, b</span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> c = <span class="title class_">CryptoJS</span>.<span class="property">enc</span>.<span class="property">Utf8</span>.<span class="title function_">parse</span>(b)</span><br><span class="line">          , d = <span class="title class_">CryptoJS</span>.<span class="property">enc</span>.<span class="property">Utf8</span>.<span class="title function_">parse</span>(<span class="string">&quot;0102030405060708&quot;</span>)</span><br><span class="line">          , e = <span class="title class_">CryptoJS</span>.<span class="property">enc</span>.<span class="property">Utf8</span>.<span class="title function_">parse</span>(a)</span><br><span class="line">          , f = <span class="title class_">CryptoJS</span>.<span class="property">AES</span>.<span class="title function_">encrypt</span>(e, c, &#123;</span><br><span class="line">            <span class="attr">iv</span>: d,</span><br><span class="line">            <span class="attr">mode</span>: <span class="title class_">CryptoJS</span>.<span class="property">mode</span>.<span class="property">CBC</span></span><br><span class="line">        &#125;);</span><br><span class="line">        <span class="keyword">return</span> f.<span class="title function_">toString</span>()</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">c</span>(<span class="params">a, b, c</span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> d, e;</span><br><span class="line">        <span class="keyword">return</span> <span class="title function_">setMaxDigits</span>(<span class="number">131</span>),</span><br><span class="line">        d = <span class="keyword">new</span> <span class="title class_">RSAKeyPair</span>(b,<span class="string">&quot;&quot;</span>,c),</span><br><span class="line">        e = <span class="title function_">encryptedString</span>(d, a)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">d</span>(<span class="params">d, e, f, g</span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> h = &#123;&#125;</span><br><span class="line">          , i = <span class="title function_">a</span>(<span class="number">16</span>);</span><br><span class="line">        <span class="keyword">return</span> h.<span class="property">encText</span> = <span class="title function_">b</span>(d, g),</span><br><span class="line">        h.<span class="property">encText</span> = <span class="title function_">b</span>(h.<span class="property">encText</span>, i),</span><br><span class="line">        h.<span class="property">encSecKey</span> = <span class="title function_">c</span>(i, e, f),</span><br><span class="line">        h</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">e</span>(<span class="params">a, b, d, e</span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> f = &#123;&#125;;</span><br><span class="line">        <span class="keyword">return</span> f.<span class="property">encText</span> = <span class="title function_">c</span>(a + e, b, d),</span><br><span class="line">        f</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="variable language_">window</span>.<span class="property">asrsea</span> = d,</span><br><span class="line">    <span class="variable language_">window</span>.<span class="property">ecnonasr</span> = e</span><br><span class="line">&#125;();</span><br></pre></td></tr></table></figure>
+
+<p>逐个函数看</p>
+<ul>
+<li><code>function a(a)</code>，看到 <code>a-zA-Z0-9</code> 加个循环里面用 <code>rand</code>，非常典型的随机串生成算法，根据循环条件得知参数为串长度。</li>
+<li><code>function b(a, b)</code>，它都说了是 <code>AES</code> 了，加密模式是 <code>CBC</code>，怕它不老实，不使用标准实现，随手找个在线加密网站，可以进行验证，测试一遍后能得到填充模式为 <code>PKCS_PADDING</code>。 参数分别是源跟密钥。</li>
+<li><code>function c(a, b, c)</code>，<code>RSA</code>这个老实说不好在线验证，先放着，后面用代码验证。</li>
+<li><code>function d(d, e, f, g) </code>，主加密流程，多观察几遍就会发现除了 <code>d</code> ，都是固定值，拷贝下来即可，而<code>d</code>中是个 <code>json</code>明文。</li>
+<li><code>function e(a, b, d, e) </code>，看上去似乎是类似流程，不过跟本文无关。</li>
+</ul>
+<p>有意思的是 <code>window.asrsea</code> 的后半部分倒过来是 <code>aesrsa</code>，小彩蛋?<br><code>rsanonce</code> 对应 <code>RSA Nonce</code> 加密?</p>
+<h2 id="从js到python"><a href="#从js到python" class="headerlink" title="从js到python"></a>从js到python</h2><p>最近在学习 <code>rust</code>，本来是准备练下手的，只可惜学艺不精，处处跟编译器对着干，就是那种明明知道该怎么写，但是用你就偏偏搞不定的感觉。</p>
+<p>写这种小工具，还是<code>python</code> 最快了。<br>装个基础环境,<code>vscode</code>里面简单配置一下，几分钟就搞定了，顺便装一下 <code>setuptools</code> 和 <code>pip</code>，再也不用担心找不到依赖库了。<br>python 本身自带一个 <code>crypt</code> 模块，看起来有点简陋，需要重新找一个密码学库。<br>用 <code>pip search crypt</code>  能搜到一些库，但是担心版本太旧不兼容问题，网上搜了一下，说是现在用的比较多的是 <code>pycryptodome</code></p>
+<p><code>pip install pycryptodome</code> 安装。</p>
+<h3 id="创建文件，写一个带测试的类"><a href="#创建文件，写一个带测试的类" class="headerlink" title="创建文件，写一个带测试的类"></a>创建文件，写一个带测试的类</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MusicDecrypt</span>(unittest.TestCase):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, methodName=<span class="string">&#x27;runTest&#x27;</span></span>):</span><br><span class="line">        <span class="built_in">super</span>(MusicDecrypt, <span class="variable language_">self</span>).__init__(methodName)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    unittest.main()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="编写-AES-及测试方法"><a href="#编写-AES-及测试方法" class="headerlink" title="编写 AES 及测试方法"></a>编写 <code>AES</code> 及测试方法</h3><p>源算法中用 <code>AES</code> 加密了两次，第一次是固定 <code>key</code> <code>0CoJUm6Qyw8W8jud</code>，第二次是长度为16的随机串(关于这个后面细说)。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">##</span></span><br><span class="line"><span class="comment"># 加到最上面</span></span><br><span class="line"><span class="comment">##</span></span><br><span class="line"><span class="keyword">from</span> Crypto.Cipher <span class="keyword">import</span> AES</span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"></span><br><span class="line">    <span class="comment">##</span></span><br><span class="line">    <span class="comment"># 加到 MusicDecrypt 里</span></span><br><span class="line">    <span class="comment">##</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment"># AES</span></span><br><span class="line">    <span class="comment"># CBC</span></span><br><span class="line">    <span class="comment"># pkcs5padding</span></span><br><span class="line">    <span class="comment"># 128bit</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">aes_encrypt</span>(<span class="params">self, s, k, iv=<span class="string">&quot;0102030405060708&quot;</span></span>):</span><br><span class="line">        l = <span class="number">16</span> - <span class="built_in">len</span>(s) % <span class="number">16</span></span><br><span class="line">        <span class="comment"># pkcs5padding</span></span><br><span class="line">        s += + l * <span class="built_in">chr</span>(l)</span><br><span class="line">        <span class="variable language_">self</span>.assertEqual(<span class="built_in">len</span>(s) % <span class="number">16</span>, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> base64.b64encode(AES.new(k.encode(<span class="string">&quot;utf-8&quot;</span>), AES.MODE_CBC, iv.encode(<span class="string">&quot;utf-8&quot;</span>)).encrypt(s.encode(<span class="string">&quot;utf-8&quot;</span>))).decode()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">test_aes_encrypt</span>(<span class="params">self</span>):</span><br><span class="line"></span><br><span class="line">        enc = <span class="variable language_">self</span>.aes_encrypt(</span><br><span class="line">            s=<span class="string">&#x27;&#123;&quot;ids&quot;:&quot;[28949499]&quot;,&quot;level&quot;:&quot;standard&quot;,&quot;encodeType&quot;:&quot;aac&quot;,&quot;csrf_token&quot;:&quot;&quot;&#125;&#x27;</span>,</span><br><span class="line">            k=<span class="string">&quot;0CoJUm6Qyw8W8jud&quot;</span>,</span><br><span class="line">        )</span><br><span class="line">        <span class="variable language_">self</span>.assertEqual(</span><br><span class="line">            enc,</span><br><span class="line">            <span class="string">&quot;g1N6YybxFdV98P/fGY0407hwjh0evx5kPtxXR0nPd/WPPFsi9Lf67vFfjUnM3MDahHpqkyZMS+9goaszbHF+i1fIufNBu+8BbSvBCJSVfEU=&quot;</span></span><br><span class="line">        )</span><br><span class="line">        <span class="variable language_">self</span>.assertEqual(</span><br><span class="line">            <span class="variable language_">self</span>.aes_encrypt(</span><br><span class="line">                s=enc,</span><br><span class="line">                k=<span class="string">&quot;GR1dIlooUjX3zmY1&quot;</span>,</span><br><span class="line">            ),</span><br><span class="line">            <span class="string">&quot;9R0jh8yE6/JTTwoH4ujCacPMOwJdbXk39BlG3ODTNe+rHMLAOSHDlp/Mza7+15lOi8bvPMtLnA6gCOujDj5iuVBJF2a2DJVkNLtrTtgl+AXpsR5hSh0+EOfuads7lq41B9EpYKktwB72zOy+kafalQ==&quot;</span></span><br><span class="line">        )</span><br></pre></td></tr></table></figure>
+
+<p><strong>这个是之前调试js时存下来的数据，通过对这组数据测试，就能写出正确的算法， RSA 同理。</strong><br>只需要将js中的b忠实还原就行了。</p>
+<h3 id="编写-RSA-及测试方法"><a href="#编写-RSA-及测试方法" class="headerlink" title="编写 RSA 及测试方法"></a>编写 <code>RSA</code> 及测试方法</h3><p>显然js中用的 RSA 并非是平常的用法，最少传进去不是个标准的公钥。</p>
+<p>网上搜了一下 <code>RSA</code> 的算法解释。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/76a462a6911a">RSA算法逆向总结</a></li>
+</ul>
+<p>得知 RSA 的加密算法核心是<br><code>c = (p ^ e) mod n</code><br>方程中p表示源串，c表示加密串，n就是文件上面说的Modules，e则为Exponent，(n, e)表示PublicKey。</p>
+<p>通过调试js能得到3个数据，</p>
+<ol>
+<li><code>GR1dIlooUjX3zmY1</code></li>
+<li><code>010001</code></li>
+<li><code>一段很长的数据</code></li>
+</ol>
+<p>根据 <code>function c(a, b, c)</code> 的算法，得知 <code>b,c</code> 构成 <code>KeyPair</code>，最后加密的是<code>a</code>，也就是 <code>GR1dIlooUjX3zmY1</code>，<code>GR1dIlooUjX3zmY1</code>本身是由 <code>function a(a)</code> 生成的16个字节(char)长度的随机串，曾作为 AES 的 key 使用过。</p>
+<p>那么剩下两个对应到算法里就是 <code>e</code> 与 <code>n</code> 了。<br>其实简单看一下就明白 <code>3</code> 不可能是 <code>e</code>，当然也可以跑一下，一个这么大的幂，根本就算不出来的。<br>当然跟入 <code>js</code> 库里面看一下就清楚了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">RSAKeyPair</span>(<span class="params">a, b, c</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">e</span> = <span class="title function_">biFromHex</span>(a),</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">d</span> = <span class="title function_">biFromHex</span>(b),</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">m</span> = <span class="title function_">biFromHex</span>(c),</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">chunkSize</span> = <span class="number">2</span> * <span class="title function_">biHighIndex</span>(<span class="variable language_">this</span>.<span class="property">m</span>),</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">radix</span> = <span class="number">16</span>,</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">barrett</span> = <span class="keyword">new</span> <span class="title class_">BarrettMu</span>(<span class="variable language_">this</span>.<span class="property">m</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">encryptedString</span>(<span class="params">a, b</span>)&#123;<span class="comment">// 省略&#125;</span></span><br></pre></td></tr></table></figure>
+<p>e 对应 <code>010001</code>， m 对应很长的串。 <code>encryptedString</code> 就是个大数算法，在运用公式前需要将 <code>GR1dIlooUjX3zmY1</code> 翻转一下。</p>
+<p><strong>老实说，原<code>js</code>里面似乎并没有先翻转，整个算法研究了一下与普通的RSA算法一样，<br>疑似以某种等价的方式置入了 <code>biToHex</code> 中，具体 <code>biToHex</code> 就没有分析为什么会等价了，有兴趣可以自行研究。</strong></p>
+<p>接下来就是写验证代码了，由于 python 原生支持大数，直接将 <code>GR1dIlooUjX3zmY1</code> 翻转并转成大数就行了，</p>
+<p>这个在 python 里面只需要一句代码，如果不是在 python 中还会涉及大数运算问题，好在 python 原生就支持这个。</p>
+<p><code>int(binascii.hexlify(p[::-1].encode(&quot;utf-8&quot;)), 16)</code></p>
+<p><code>[::-1]</code> 翻转，<code>binascii.hexlify</code> 转为 <code>bytes</code> 再通过 <code>int</code>(16代表源数据是16进制) 转为大数即可。</p>
+<blockquote>
+<p>.b’1Ymz3XjUoolId1RG’<br>b’31596d7a33586a556f6f6c4964315247’<br>0X31596D7A33586A556F6F6C4964315247</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">##</span></span><br><span class="line"><span class="comment"># 加到最上面</span></span><br><span class="line"><span class="comment">##</span></span><br><span class="line"><span class="keyword">import</span> binascii</span><br><span class="line"></span><br><span class="line">    <span class="comment">##</span></span><br><span class="line">    <span class="comment"># 加到 MusicDecrypt 里</span></span><br><span class="line">    <span class="comment">##</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment"># reverse p : p = p[::-1]</span></span><br><span class="line">    <span class="comment"># [p^e] % m</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">rsa_encrypt</span>(<span class="params">self, p, e, m</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">format</span>(<span class="built_in">int</span>(binascii.hexlify(p[::-<span class="number">1</span>].encode(<span class="string">&quot;utf-8&quot;</span>)), <span class="number">16</span>)**<span class="built_in">int</span>(e, <span class="number">16</span>) % <span class="built_in">int</span>(m, <span class="number">16</span>), <span class="string">&#x27;x&#x27;</span>).zfill(<span class="number">256</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">test_rsa_encrypt</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="variable language_">self</span>.assertEqual(</span><br><span class="line">            <span class="variable language_">self</span>.rsa_encrypt(</span><br><span class="line">                p=<span class="string">&quot;GR1dIlooUjX3zmY1&quot;</span>,</span><br><span class="line">                e=<span class="string">&quot;010001&quot;</span>,</span><br><span class="line">                m=<span class="string">&quot;00e0b509f6259df8642dbc35662901477df22677ec152b5ff68ace615bb7b725152b3ab17a876aea8a5aa76d2e417629ec4ee341f56135fccf695280104e0312ecbda92557c93870114af6c9d05c4f7f0c3685b7a46bee255932575cce10b424d813cfe4875d3e82047b97ddef52741d546b8e289dc6935b3ece0462db0a22b8e7&quot;</span></span><br><span class="line">            ),</span><br><span class="line">            <span class="string">&quot;abc2e11cd93268085180aace6208c0caed01b7c2af641999a79adf362fb778a3fba5117f9c06541a5620d4dccd628085b53c1b22d971068a458e1ac16d831860ab2f1da4c7c8342f8bb815c6ab6c6c335cc797a4273124ff4846c9d58b0015691f933323fe080b8d026836880af99e918c7ace1813356b8bc327a52dcc24050a&quot;</span></span><br><span class="line">        )</span><br></pre></td></tr></table></figure>
+
+<h3 id="构造body"><a href="#构造body" class="headerlink" title="构造body"></a>构造body</h3><p>将两次<code>AES</code>之后 的结果进行 <code>urlencode</code> ，然后与RSA的返回值拼接。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 加在最前面</span></span><br><span class="line"><span class="keyword">import</span> urllib</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line">    randKey = <span class="string">&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">## 替换 __init__</span></span><br><span class="line">    <span class="keyword">def</span>  <span class="title function_">__init__</span>(<span class="params">self, methodName=<span class="string">&#x27;runTest&#x27;</span></span>):</span><br><span class="line">        <span class="built_in">super</span>(MusicDecrypt, <span class="variable language_">self</span>).__init__(methodName)</span><br><span class="line">        <span class="variable language_">self</span>.randKey = <span class="string">&#x27;&#x27;</span>.join(random.sample(</span><br><span class="line">            string.ascii_letters + string.digits, <span class="number">16</span>))</span><br><span class="line"></span><br><span class="line">    <span class="comment">## 加入 MusicDecrypt</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">packet_body</span>(<span class="params">self, <span class="built_in">id</span></span>):</span><br><span class="line">        enc_text = <span class="variable language_">self</span>.aes_encrypt(</span><br><span class="line">            s=<span class="string">&#x27;&#123;&quot;ids&quot;:&quot;[&#x27;</span> + <span class="built_in">id</span> + <span class="string">&#x27;]&quot;,&quot;level&quot;:&quot;standard&quot;,&quot;encodeType&quot;:&quot;mp3&quot;,&quot;csrf_token&quot;:&quot;&quot;&#125;&#x27;</span>,</span><br><span class="line">            k=<span class="string">&quot;0CoJUm6Qyw8W8jud&quot;</span>,</span><br><span class="line">        )</span><br><span class="line">        enc_text = <span class="variable language_">self</span>.aes_encrypt(</span><br><span class="line">            s=enc_text,</span><br><span class="line">            k=<span class="variable language_">self</span>.randKey,</span><br><span class="line">        )</span><br><span class="line">        enc_sec_key = <span class="variable language_">self</span>.rsa_encrypt(</span><br><span class="line">            p=<span class="variable language_">self</span>.randKey,</span><br><span class="line">            e=<span class="string">&quot;010001&quot;</span>,</span><br><span class="line">            m=<span class="string">&quot;00e0b509f6259df8642dbc35662901477df22677ec152b5ff68ace615bb7b725152b3ab17a876aea8a5aa76d2e417629ec4ee341f56135fccf695280104e0312ecbda92557c93870114af6c9d05c4f7f0c3685b7a46bee255932575cce10b424d813cfe4875d3e82047b97ddef52741d546b8e289dc6935b3ece0462db0a22b8e7&quot;</span></span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> (<span class="string">&#x27;params=&#x27;</span> + urllib.parse.quote(enc_text) +</span><br><span class="line">                <span class="string">&#x27;&amp;encSecKey=&#x27;</span> + enc_sec_key)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>简单整理之后，在 main 中调用</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    <span class="comment"># unittest.main()</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(MusicDecrypt()</span><br><span class="line">          .packet_body(<span class="string">&#x27;1297747757&#x27;</span>))</span><br></pre></td></tr></table></figure>
+
+<p>将得到的数据放入 REST-Client 测试是否正常返回。依据这种思路，还能得到图片和歌词的地址，另外中间的参数也可以配置,<br>例如 encodeType 可以调整为 aac 等。</p>
+<p>python版在这里就算告一段落了。</p>
+<h2 id="从js到c"><a href="#从js到c" class="headerlink" title="从js到c++"></a>从js到c++</h2><h3 id="vcpkg"><a href="#vcpkg" class="headerlink" title="vcpkg"></a>vcpkg</h3><p>作为微软官方的c++包管理工具，虽然并不是很好用，但总比没有强。</p>
+<p>1.安装 <code>vs</code>，本文用的 <code>vs2019</code><br>2.安装 <code>vcpkg</code>，很容易，命令行跑一下就行了</p>
+<p>看一下基本命令</p>
+<ul>
+<li><code>search</code></li>
+<li><code>install --triplet</code> &#x2F; <code>install xxx:x64-windows</code></li>
+</ul>
+<p>例如 安装 boost 库, <code>:</code> 后面代表的是 x64 的动态库<br><code>vcpkg install boost:x64-windows</code><br>可以随便输入一个错误信息，它会提示有哪些版本<br><code>vcpkg install boost:x</code></p>
+<blockquote>
+<p>  x64-windows<br>  x64-windows-static<br>  x86-windows<br>  x86-windows-static</p>
+</blockquote>
+<p><code>windows</code> 上开发，大概也就这几个用的比较多了。</p>
+<h3 id="cryptopp-与-cpr"><a href="#cryptopp-与-cpr" class="headerlink" title="cryptopp 与 cpr"></a>cryptopp 与 cpr</h3><p>本文的加密库选的 <code>cryptopp</code>，事实上我对<code>c</code>版的 <code>libsodium</code> <code>openssl</code>，只是我考虑像 <code>python</code> 那样简洁的实现，所以语言上选的 <code>c++</code>，既然用 <code>c++</code> 还是统一比较好。</p>
+<p>另外本文选了 <code>boost.test</code> 做单元测试，偷懒的话可以不测试。</p>
+<p><code>cryptopp</code>开始用的时候还是有点不习惯。对着手册总算是翻完了。</p>
+<p><strong>本文为了行文方便，直接全都塞到了头文件，实际开发中应该分开，避免头文件互相引用导致重定义等问题。</strong></p>
+<h3 id="编写加解密逻辑"><a href="#编写加解密逻辑" class="headerlink" title="编写加解密逻辑"></a>编写加解密逻辑</h3><p>c++部分就从简了，毕竟分析过一次实现逻辑了。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">pragma</span> once</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;ctime&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdlib&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cryptopp/cryptlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cryptopp/modes.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cryptopp/aes.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cryptopp/rsa.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cryptopp/randpool.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cryptopp/osrng.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cryptopp/base64.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cryptopp/hex.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cpr/util.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> music&#123;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MusicDecrypt</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line"></span><br><span class="line">    <span class="built_in">MusicDecrypt</span>() &#123;</span><br><span class="line">        <span class="comment">// 构造 e</span></span><br><span class="line">        std::<span class="built_in">srand</span>(<span class="built_in">static_cast</span>&lt;std::<span class="type">uint32_t</span>&gt;(std::<span class="built_in">time</span>(<span class="literal">nullptr</span>)));</span><br><span class="line">        <span class="keyword">for</span> (std::<span class="type">uint8_t</span> i = <span class="number">0</span>; i &lt; <span class="number">16</span>; i++) &#123;</span><br><span class="line">            rsa_p.<span class="built_in">push_back</span>(original_seq[<span class="built_in">rand</span>() % original_seq.<span class="built_in">length</span>()]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    ~<span class="built_in">MusicDecrypt</span>() &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">auto</span> <span class="title">aes_encrypt</span><span class="params">(std::string s, std::string k = <span class="string">&quot;0CoJUm6Qyw8W8jud&quot;</span>, std::string iv = <span class="string">&quot;0102030405060708&quot;</span>)</span> </span>&#123;</span><br><span class="line">        std::string cipher_text;</span><br><span class="line"></span><br><span class="line">        CryptoPP::CBC_Mode&lt;CryptoPP::AES&gt;::<span class="function">Encryption <span class="title">cbc_enc</span><span class="params">(<span class="keyword">reinterpret_cast</span>&lt;<span class="type">const</span> std::<span class="type">uint8_t</span>*&gt;(k.data()), k.length(), <span class="keyword">reinterpret_cast</span>&lt;<span class="type">const</span> std::<span class="type">uint8_t</span>*&gt;(iv.data()))</span></span>;</span><br><span class="line"></span><br><span class="line">        CryptoPP::StringSource _(s, <span class="literal">true</span>,</span><br><span class="line">        <span class="keyword">new</span> CryptoPP::<span class="built_in">StreamTransformationFilter</span>(</span><br><span class="line">            cbc_enc,                                              <span class="comment">// cbc 编码</span></span><br><span class="line">            <span class="keyword">new</span> CryptoPP::<span class="built_in">Base64Encoder</span>(                          <span class="comment">// base64解码 参数2置为false表示不换行</span></span><br><span class="line">                <span class="keyword">new</span> CryptoPP::<span class="built_in">StringSink</span>(cipher_text),<span class="literal">false</span>),     <span class="comment">// 不需要 delete, 里面包装了 https://www.cryptopp.com/wiki/StringSource</span></span><br><span class="line">            CryptoPP::BlockPaddingSchemeDef::PKCS_PADDING)        <span class="comment">// PKCS_PADDING 填充</span></span><br><span class="line">        );</span><br><span class="line">        <span class="keyword">return</span> cipher_text;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">auto</span> <span class="title">rsa_encrypt</span><span class="params">(std::string p, std::string e = <span class="string">&quot;&quot;</span>, std::string m = <span class="string">&quot;&quot;</span>)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (e.<span class="built_in">empty</span>())</span><br><span class="line">            e = default_e;</span><br><span class="line">        <span class="keyword">if</span> (m.<span class="built_in">empty</span>())</span><br><span class="line">            m = default_m;</span><br><span class="line"></span><br><span class="line">        std::string ps = <span class="string">&quot;0x&quot;</span>;</span><br><span class="line">        std::<span class="built_in">reverse</span>(p.<span class="built_in">begin</span>(), p.<span class="built_in">end</span>());</span><br><span class="line">        CryptoPP::StringSource _(p, <span class="literal">true</span>,</span><br><span class="line">            <span class="keyword">new</span> CryptoPP::<span class="built_in">HexEncoder</span>(</span><br><span class="line">                <span class="keyword">new</span> CryptoPP::<span class="built_in">StringSink</span>(ps),</span><br><span class="line">                <span class="literal">true</span>,</span><br><span class="line">                <span class="number">0</span>,</span><br><span class="line">                <span class="string">&quot;0x&quot;</span></span><br><span class="line">            ) <span class="comment">// HexEncoder</span></span><br><span class="line">        ); <span class="comment">// StringSource</span></span><br><span class="line"></span><br><span class="line">        <span class="function">CryptoPP::Integer <span class="title">ni</span><span class="params">(m.c_str())</span>, <span class="title">ei</span><span class="params">(e.c_str())</span>, <span class="title">pi</span><span class="params">(ps.c_str())</span></span>;</span><br><span class="line"></span><br><span class="line">        CryptoPP::RSA::PublicKey pubKey;</span><br><span class="line">        pubKey.<span class="built_in">Initialize</span>(ni, ei);</span><br><span class="line"></span><br><span class="line">        <span class="function">CryptoPP::RSAES_OAEP_SHA_Encryptor <span class="title">pub</span><span class="params">(pubKey)</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> CryptoPP::<span class="built_in">IntToString</span>(pubKey.<span class="built_in">ApplyFunction</span>(pi), <span class="number">16</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">auto</span> <span class="title">paket_body</span><span class="params">(std::string id, std::string k = <span class="string">&quot;&quot;</span>)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">auto</span> enc_text = <span class="string">u8&quot;&#123;\&quot;ids\&quot;:\&quot;[&quot;</span> +</span><br><span class="line">            id +</span><br><span class="line">            <span class="string">&quot;]\&quot;,\&quot;level\&quot;:\&quot;standard\&quot;,\&quot;encodeType\&quot;:\&quot;mp3\&quot;,\&quot;csrf_token\&quot;:\&quot;\&quot;&#125;&quot;</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (!k.<span class="built_in">empty</span>())</span><br><span class="line">            rsa_p = k;</span><br><span class="line"></span><br><span class="line">        enc_text = <span class="built_in">aes_encrypt</span>(enc_text);</span><br><span class="line">        enc_text = <span class="built_in">aes_encrypt</span>(enc_text, rsa_p);</span><br><span class="line">        <span class="keyword">auto</span> enc_sec_key = <span class="built_in">rsa_encrypt</span>(rsa_p);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;params=&quot;</span> + cpr::util::<span class="built_in">urlEncode</span>(enc_text) +</span><br><span class="line">            <span class="string">&quot;&amp;encSecKey=&quot;</span> + enc_sec_key;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    std::string rsa_p;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// 字符序列</span></span><br><span class="line">    <span class="type">static</span> <span class="type">const</span> std::string original_seq;</span><br><span class="line">    <span class="type">static</span> <span class="type">const</span> std::string default_e;</span><br><span class="line">    <span class="type">static</span> <span class="type">const</span> std::string default_m;</span><br><span class="line">&#125;; <span class="comment">// MusicDecrypt</span></span><br><span class="line"></span><br><span class="line"><span class="type">const</span> std::string MusicDecrypt::original_seq = <span class="string">u8&quot;0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;</span>;</span><br><span class="line"><span class="type">const</span> std::string MusicDecrypt::default_e = <span class="string">u8&quot;0x010001&quot;</span>;</span><br><span class="line"><span class="type">const</span> std::string MusicDecrypt::default_m = <span class="string">u8&quot;0x00e0b509f6259df8642dbc35662901477df22677ec152b5ff68ace615bb7b725152b3ab17a876aea8a5aa76d2e417629ec4ee341f56135fccf695280104e0312ecbda92557c93870114af6c9d05c4f7f0c3685b7a46bee255932575cce10b424d813cfe4875d3e82047b97ddef52741d546b8e289dc6935b3ece0462db0a22b8e7&quot;</span>;</span><br><span class="line"></span><br><span class="line">&#125;  <span class="comment">// music</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="编写网络模块"><a href="#编写网络模块" class="headerlink" title="编写网络模块"></a>编写网络模块</h3><p><code>cpr</code> 的使用就比较简单了，和 <code>python</code> 的 <code>urllib</code> 有的一比。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">pragma</span> once</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cpr/cpr.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> music &#123;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MusicJson</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">MusicJson</span>() &#123;&#125;</span><br><span class="line">    ~<span class="built_in">MusicJson</span>() &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">auto</span> <span class="title">get_json</span><span class="params">(std::string packet_body)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">auto</span> r = cpr::<span class="built_in">Post</span>(cpr::Url&#123; <span class="string">&quot;https://music.163.com/weapi/song/enhance/player/url/v1?csrf_token=&quot;</span> &#125;,</span><br><span class="line">            cpr::Body&#123; packet_body &#125;,</span><br><span class="line">            cpr::Header&#123; &#123;<span class="string">&quot;Content-Type&quot;</span>, <span class="string">&quot;application/x-www-form-urlencoded&quot;</span>&#125;,&#123;<span class="string">&quot;Connection&quot;</span>, <span class="string">&quot;close&quot;</span>&#125; &#125;);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span>  r.text;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;; <span class="comment">// MusicJson</span></span><br><span class="line"></span><br><span class="line">&#125;  <span class="comment">// music</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="编写测试"><a href="#编写测试" class="headerlink" title="编写测试"></a>编写测试</h3><p>需要注意，测试和上面的编写实际上是同步进行的</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;config.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> _TEST_MODULE</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BOOST_TEST_MODULE music_test</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;boost/test/included/unit_test.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;boost/log/trivial.hpp&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;music_decrypt.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;music_get_json.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 全局测试夹具</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">global_fixture</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">global_fixture</span>() &#123;</span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;开始准备测试数据-------&gt;&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">virtual</span>~<span class="built_in">global_fixture</span>() &#123;</span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;清理测试环境&lt;---------&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">BOOST_GLOBAL_FIXTURE</span>(global_fixture);</span><br><span class="line"><span class="built_in">BOOST_AUTO_TEST_CASE</span>(TestCase_4_aes_encrypt)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">auto</span> enc_text = music::<span class="built_in">MusicDecrypt</span>().<span class="built_in">aes_encrypt</span>(<span class="string">u8&quot;&#123;\&quot;ids\&quot;:\&quot;[28949499]\&quot;,\&quot;level\&quot;:\&quot;standard\&quot;,\&quot;encodeType\&quot;:\&quot;aac\&quot;,\&quot;csrf_token\&quot;:\&quot;\&quot;&#125;&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">BOOST_LOG_TRIVIAL</span>(info) &lt;&lt; <span class="string">&quot;开始测试 aes_encrypt&quot;</span>;</span><br><span class="line">    <span class="built_in">BOOST_TEST</span>(enc_text == <span class="string">&quot;g1N6YybxFdV98P/fGY0407hwjh0evx5kPtxXR0nPd/WPPFsi9Lf67vFfjUnM3MDahHpqkyZMS+9goaszbHF+i1fIufNBu+8BbSvBCJSVfEU=&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">BOOST_TEST</span>(music::<span class="built_in">MusicDecrypt</span>().<span class="built_in">aes_encrypt</span>(enc_text, <span class="string">u8&quot;GR1dIlooUjX3zmY1&quot;</span>) ==</span><br><span class="line">        <span class="string">&quot;9R0jh8yE6/JTTwoH4ujCacPMOwJdbXk39BlG3ODTNe+rHMLAOSHDlp/Mza7+15lOi8bvPMtLnA6gCOujDj5iuVBJF2a2DJVkNLtrTtgl+AXpsR5hSh0+EOfuads7lq41B9EpYKktwB72zOy+kafalQ==&quot;</span></span><br><span class="line">    );</span><br><span class="line">    <span class="built_in">BOOST_LOG_TRIVIAL</span>(info) &lt;&lt; <span class="string">&quot;结束测试 aes_encrypt&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">BOOST_AUTO_TEST_CASE</span>(TestCase_4_rsa_encrypt)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">BOOST_LOG_TRIVIAL</span>(info) &lt;&lt; <span class="string">&quot;开始测试 rsa_encrypt&quot;</span>;</span><br><span class="line">    <span class="built_in">BOOST_TEST</span>(music::<span class="built_in">MusicDecrypt</span>().<span class="built_in">rsa_encrypt</span>(<span class="string">u8&quot;GR1dIlooUjX3zmY1&quot;</span>) ==</span><br><span class="line">        <span class="string">&quot;abc2e11cd93268085180aace6208c0caed01b7c2af641999a79adf362fb778a3fba5117f9c06541a5620d4dccd628085b53c1b22d971068a458e1ac16d831860ab2f1da4c7c8342f8bb815c6ab6c6c335cc797a4273124ff4846c9d58b0015691f933323fe080b8d026836880af99e918c7ace1813356b8bc327a52dcc24050a&quot;</span></span><br><span class="line">    );</span><br><span class="line">    <span class="built_in">BOOST_LOG_TRIVIAL</span>(info) &lt;&lt; <span class="string">&quot;结束测试 rsa_encrypt&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">BOOST_AUTO_TEST_CASE</span>(TestCase_4_paket_body)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">BOOST_LOG_TRIVIAL</span>(info) &lt;&lt; <span class="string">&quot;开始测试 paket_body&quot;</span>;</span><br><span class="line">    <span class="built_in">BOOST_TEST</span>(music::<span class="built_in">MusicDecrypt</span>().<span class="built_in">paket_body</span>(<span class="string">u8&quot;28949499&quot;</span>, <span class="string">u8&quot;GR1dIlooUjX3zmY1&quot;</span>) ==</span><br><span class="line">        <span class="string">&quot;params=9R0jh8yE6%2fJTTwoH4ujCacPMOwJdbXk39BlG3ODTNe%2brHMLAOSHDlp%2fMza7%2b15lOi8bvPMtLnA6gCOujDj5iuT1EbsfNRzJrzZm6oIqgWhVsWcO%2bhrLFCHDHgyIYGdXOBmuWBRRiDCyMUFJAq3yrVw%3d%3d&amp;encSecKey=abc2e11cd93268085180aace6208c0caed01b7c2af641999a79adf362fb778a3fba5117f9c06541a5620d4dccd628085b53c1b22d971068a458e1ac16d831860ab2f1da4c7c8342f8bb815c6ab6c6c335cc797a4273124ff4846c9d58b0015691f933323fe080b8d026836880af99e918c7ace1813356b8bc327a52dcc24050a&quot;</span></span><br><span class="line">    );</span><br><span class="line">    <span class="built_in">BOOST_LOG_TRIVIAL</span>(info) &lt;&lt; <span class="string">&quot;结束测试 paket_body&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">BOOST_AUTO_TEST_CASE</span>(TestCase_4_get_json)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">BOOST_LOG_TRIVIAL</span>(info) &lt;&lt; <span class="string">&quot;开始测试 get_json&quot;</span>;</span><br><span class="line">    <span class="built_in">BOOST_TEST</span>(music::<span class="built_in">MusicJson</span>().<span class="built_in">get_json</span>(</span><br><span class="line">        <span class="string">&quot;params=9R0jh8yE6%2fJTTwoH4ujCacPMOwJdbXk39BlG3ODTNe%2brHMLAOSHDlp%2fMza7%2b15lOi8bvPMtLnA6gCOujDj5iuT1EbsfNRzJrzZm6oIqgWhVsWcO%2bhrLFCHDHgyIYGdXOBmuWBRRiDCyMUFJAq3yrVw%3d%3d&amp;encSecKey=abc2e11cd93268085180aace6208c0caed01b7c2af641999a79adf362fb778a3fba5117f9c06541a5620d4dccd628085b53c1b22d971068a458e1ac16d831860ab2f1da4c7c8342f8bb815c6ab6c6c335cc797a4273124ff4846c9d58b0015691f933323fe080b8d026836880af99e918c7ace1813356b8bc327a52dcc24050a&quot;</span></span><br><span class="line">    ) != <span class="string">&quot;&quot;</span>);</span><br><span class="line">    <span class="built_in">BOOST_LOG_TRIVIAL</span>(info) &lt;&lt; <span class="string">&quot;结束测试 get_json&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+
+<h3 id="main-和-config"><a href="#main-和-config" class="headerlink" title="main 和 config"></a>main 和 config</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;config.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> !_TEST_MODULE</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;music_decrypt.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;music_get_json.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">DEBUG_EXPR</span>(std::cout &lt;&lt; music::<span class="built_in">MusicJson</span>().<span class="built_in">get_json</span>(music::<span class="built_in">MusicDecrypt</span>().<span class="built_in">paket_body</span>(<span class="string">&quot;31830011&quot;</span>)) &lt;&lt; std::endl;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span> <span class="comment">// _TEST</span></span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">pragma</span> once</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> _TEST_MODULE 1</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> _DEBUG</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> DEBUG_EXPR(x) do&#123;x&#125;while(0)</span></span><br><span class="line"><span class="meta">#<span class="keyword">else</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> DEBUG_EXPR(x)</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+
+<h3 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h3><img src="/2020/01/10/yun_music_cryptor/image-20221010181116980.png" class="" alt="image-20221010181116980">
+
+<p>该版本代码仅仅是个<code>Demo</code>，可以考虑 <code>enum</code> + <code>map</code> 支持一下获取歌词图片啥的，再引入json解析库做个下载器啥的。</p>
+<h3 id="趟坑-cpp-netlib"><a href="#趟坑-cpp-netlib" class="headerlink" title="趟坑 cpp-netlib"></a>趟坑 cpp-netlib</h3><p>开始用的 <code>cpp-netlib</code>，毕竟支持同时客户端服务端，直到我的膝盖中了一箭。</p>
+<p><code>vcpkg</code> 默认当前安装的是 <code>boost 1.7.0 +</code> 版本，<br>当前的 <code>cpp-netlib 1.3.0</code> 只能用 <code>boost 1.6.9</code> 以下版本，具体哪个版本我也没翻到。</p>
+<p>Error:</p>
+<ol>
+<li><code>error C3536: &quot;delegate&quot; 未初始化</code> – <a target="_blank" rel="noopener" href="https://github.com/boostorg/proto/pull/2/files">bugfix</a></li>
+<li><code>error: no member named &#39;get_io_service&#39;</code> – <a target="_blank" rel="noopener" href="https://github.com/rstudio/rstudio/issues/4636">issues_4636</a></li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文算是个大杂烩，从各方面讲了一通，算是为以后有移到php需求的时候打个底。 :D</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/protocol-analysis/" rel="tag"># protocol_analysis</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2019/12/31/Engintime_protocol_analysis_3/" rel="prev" title="Engintime系列逆向分析(3)--工具开发">
+                  <i class="fa fa-angle-left"></i> Engintime系列逆向分析(3)--工具开发
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/03/10/nt_driver_0/" rel="next" title="nt驱动开发(0)--复习">
+                  nt驱动开发(0)--复习 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ewing</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">38k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:20</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"piz-ewing/piz-ewing.github.io","issue_term":"pathname","theme":"github-light"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+
+</body>
+</html>

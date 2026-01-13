@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"piz-ewing.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="坚决抵制盗版行为，本文仅作 OSX 软件逆向分析及 OSX 软件安全相关的研究目的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ishot_crack -- OSX M1(Apple Sillcon) 逆向工程实践">
+<meta property="og:url" content="https://piz-ewing.github.io/2022/03/30/ishot_crack/index.html">
+<meta property="og:site_name" content="ewing">
+<meta property="og:description" content="坚决抵制盗版行为，本文仅作 OSX 软件逆向分析及 OSX 软件安全相关的研究目的。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://piz-ewing.github.io/2022/03/30/ishot_crack/0.png">
+<meta property="og:image" content="https://piz-ewing.github.io/2022/03/30/ishot_crack/1.png">
+<meta property="og:image" content="https://piz-ewing.github.io/2022/03/30/ishot_crack/2.png">
+<meta property="og:image" content="https://piz-ewing.github.io/2022/03/30/ishot_crack/3.png">
+<meta property="og:image" content="https://piz-ewing.github.io/2022/03/30/ishot_crack/4.png">
+<meta property="og:image" content="https://piz-ewing.github.io/2022/03/30/ishot_crack/5.png">
+<meta property="og:image" content="https://piz-ewing.github.io/2022/03/30/ishot_crack/6.png">
+<meta property="og:image" content="https://piz-ewing.github.io/2022/03/30/ishot_crack/7.png">
+<meta property="og:image" content="https://piz-ewing.github.io/2022/03/30/ishot_crack/8.png">
+<meta property="og:image" content="https://piz-ewing.github.io/2022/03/30/ishot_crack/9.png">
+<meta property="og:image" content="https://piz-ewing.github.io/2022/03/30/ishot_crack/10.png">
+<meta property="og:image" content="https://piz-ewing.github.io/2022/03/30/ishot_crack/11.png">
+<meta property="og:image" content="https://piz-ewing.github.io/2022/03/30/ishot_crack/12.png">
+<meta property="article:published_time" content="2022-03-30T04:23:21.000Z">
+<meta property="article:modified_time" content="2022-03-30T04:23:21.000Z">
+<meta property="article:author" content="ewing">
+<meta property="article:tag" content="AppStore内购 OSX M1(Apple Sillcon) 逆向工程实践">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://piz-ewing.github.io/2022/03/30/ishot_crack/0.png">
+
+
+<link rel="canonical" href="https://piz-ewing.github.io/2022/03/30/ishot_crack/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://piz-ewing.github.io/2022/03/30/ishot_crack/","path":"2022/03/30/ishot_crack/","title":"ishot_crack -- OSX M1(Apple Sillcon) 逆向工程实践"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>ishot_crack -- OSX M1(Apple Sillcon) 逆向工程实践 | ewing</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@next-theme/pjax@0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/pjax.js" defer></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.5.0/dist/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">ewing</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-explorer"><a href="/explorer/" rel="section"><i class="fa fa-binoculars fa-fw"></i>浏览</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9D%9A%E5%86%B3%E6%8A%B5%E5%88%B6%E7%9B%97%E7%89%88%E8%A1%8C%E4%B8%BA%EF%BC%8C%E6%9C%AC%E6%96%87%E4%BB%85%E4%BD%9C-OSX-%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E5%88%86%E6%9E%90%E5%8F%8A-OSX-%E8%BD%AF%E4%BB%B6%E5%AE%89%E5%85%A8%E7%9B%B8%E5%85%B3%E7%9A%84%E7%A0%94%E7%A9%B6%E7%9B%AE%E7%9A%84%E3%80%82"><span class="nav-number">1.</span> <span class="nav-text">坚决抵制盗版行为，本文仅作 OSX 软件逆向分析及 OSX 软件安全相关的研究目的。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">2.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%A5%E4%BD%9C%E7%8E%AF%E5%A2%83"><span class="nav-number">3.</span> <span class="nav-text">工作环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%94%B6%E9%9B%86%E4%BF%A1%E6%81%AF"><span class="nav-number">4.</span> <span class="nav-text">收集信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA"><span class="nav-number">5.</span> <span class="nav-text">深入浅出</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A2%B3%E7%90%86%E9%80%BB%E8%BE%91"><span class="nav-number">6.</span> <span class="nav-text">梳理逻辑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8C%9C%E6%83%B3%E9%AA%8C%E8%AF%81"><span class="nav-number">7.</span> <span class="nav-text">猜想验证</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">8.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ewing"
+      src="https://avatars.githubusercontent.com/u/78925867?v=4">
+  <p class="site-author-name" itemprop="name">ewing</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/piz-ewing" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;piz-ewing" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:piz.ewing@gmail.com" title="E-Mail → mailto:piz.ewing@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://piz-ewing.github.io/2022/03/30/ishot_crack/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars.githubusercontent.com/u/78925867?v=4">
+      <meta itemprop="name" content="ewing">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ewing">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="ishot_crack -- OSX M1(Apple Sillcon) 逆向工程实践 | ewing">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ishot_crack -- OSX M1(Apple Sillcon) 逆向工程实践
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-03-30 04:23:21" itemprop="dateCreated datePublished" datetime="2022-03-30T04:23:21+00:00">2022-03-30</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="坚决抵制盗版行为，本文仅作-OSX-软件逆向分析及-OSX-软件安全相关的研究目的。"><a href="#坚决抵制盗版行为，本文仅作-OSX-软件逆向分析及-OSX-软件安全相关的研究目的。" class="headerlink" title="坚决抵制盗版行为，本文仅作 OSX 软件逆向分析及 OSX 软件安全相关的研究目的。"></a><strong>坚决抵制盗版行为，本文仅作 OSX 软件逆向分析及 OSX 软件安全相关的研究目的。</strong></h2><span id="more"></span>
+
+<hr>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>前段时间遇到款相当实用的国产截图工具–ishot，大致翻看了下是<code>AppStore</code>内购。<br>正好没尝试过分析<code>AppStore</code>内购应用，遂拿起把玩一番。</p>
+<h2 id="工作环境"><a href="#工作环境" class="headerlink" title="工作环境"></a>工作环境</h2><ul>
+<li>macos Monterey 12.3 (21E230) (M1)</li>
+<li>iShot 2.0.7 (980)</li>
+<li>IDA Pro (7.6)</li>
+<li>Proxyman 3.3.0 (30300)</li>
+</ul>
+<h2 id="收集信息"><a href="#收集信息" class="headerlink" title="收集信息"></a>收集信息</h2><p>打开软件，看到有恢复购买字样，这是很好的开始。</p>
+<img src="/2022/03/30/ishot_crack/0.png" class="" alt="目标">
+
+<p>这意味着，如果软件校验不是足够复杂，只需要让其恢复购买步入正确逻辑即可达成目标。<br>即便是它不能一步到位，也能作为一个切入点。<br>用IDA打开，遵循上述逻辑，将<code>restore</code>作为关键字搜索相关函数。</p>
+<img src="/2022/03/30/ishot_crack/1.png" class="" alt="restore">
+
+<p>一眼看去，印象最深的便是<code>BuyFromAppStoreController restoreBtnClick:</code>，也就是按键对应的函数。</p>
+<img src="/2022/03/30/ishot_crack/2.png" class="" alt="restoreBtnClick">
+
+<p>简单看一下逻辑，大概就是访问网络后处理结果。<br>对应的处理函数为<code>ApplePurchaseManager restorePurchaseWithCompleteBlock:</code></p>
+<img src="/2022/03/30/ishot_crack/3.png" class="" alt="restorePurchaseWithCompleteBlock">
+
+<p>继续深入<code>restorePurchaseWithCompleteBlock</code>，最终会调用<code>restoreCompletedTransactions</code>相关函数处理。</p>
+<p>搜索<code>restoreCompletedTransactions</code>。</p>
+<img src="/2022/03/30/ishot_crack/4.png" class="" alt="restoreCompletedTransactions">
+
+<p>从符号名上看<br>1.<code>paymentQueueRestoreCompletedTransactionsFinished</code>为处理成功。<br>2.<code>paymentQueue:restoreCompletedTransactionsFailedWithError</code>为处理失败。</p>
+<p>通常失败逻辑比较简单的话，可以做个笔记，有助于后续分析。</p>
+<img src="/2022/03/30/ishot_crack/5.png" class="" alt="restoreCompletedTransactionsFailedWithError">
+
+<p>当调用<code>-[ApplePurchaseManager handleActionWithType:data:](self, &quot;handleActionWithType:data:&quot;, 1LL, 0LL);</code>时即为失败。</p>
+<p>继续看成功部分</p>
+<img src="/2022/03/30/ishot_crack/6.png" class="" alt="paymentQueueRestoreCompletedTransactionsFinished">
+
+<p>它的功能仅仅是转入<br><code>verifyPurchaseWithPaymentTransaction:isTestServer:Compl:</code>，<br>继续深入</p>
+<img src="/2022/03/30/ishot_crack/7.png" class="" alt="verifyPurchaseWithPaymentTransaction">
+<p>看到一处类似<code>完成函数注册</code>的代码，对函数<code>sub_10004299D</code>需要特别关注。</p>
+<p>结合上下文，可以得到一个大致流程。</p>
+<ol>
+<li>请求<code>https://buy.itunes.apple.com/verifyReceipt</code></li>
+<li>在<code>sub_10004299D</code>处理返回数据</li>
+<li>校验数据完成恢复</li>
+</ol>
+<h2 id="深入浅出"><a href="#深入浅出" class="headerlink" title="深入浅出"></a>深入浅出</h2><p>跟入函数<code>sub_10004299D</code>一探究竟。</p>
+<img src="/2022/03/30/ishot_crack/8.png" class="" alt="sub_10004299D">
+
+<p>其中<code>AES</code>的字样格外醒目，通常验证算法都会伴随加解密。也就是说，进到<code>AES</code>加密流程更符合猜想。<br>这里的<code>AES</code>只有一个加密部分，同样后续还需要分析解密部分。</p>
+<p>之前分析过<br><code>-[ApplePurchaseManager handleActionWithType:data:](self, &quot;handleActionWithType:data:&quot;, 1LL, 0LL);</code>为失败。</p>
+<p>此处可以得到一个初步结论，当参数为<code>(1,??) (3,0)....</code>为失败，<code>(4,0)</code>为成功。</p>
+<p>为了能进入到<code>AES</code>算法步骤，必须让<code>sub_100048A6D(v30)</code>返回真。</p>
+<p>其中<code>v30</code>来自<code>receipt</code>， 这个实际上是之前返回的数据包。</p>
+<p>打开<code>Proxyman</code>验证。</p>
+<img src="/2022/03/30/ishot_crack/9.png" class="" alt="response">
+
+
+<p>进入<code>sub_100048A6D</code>函数</p>
+<img src="/2022/03/30/ishot_crack/10.png" class="" alt="sub_100048A6D">
+
+<p>其中<code>dbl_1000D6BF0   dq 2.6784e9, 3.1536e10</code>。</p>
+<p>逻辑上一目了然。为了让返回值为1，即v34必须为1。<br>若要保持<code>v34</code>为1，也就必须让<code>v33&gt;v31</code>成立，<code>v31</code>来自<code>request_date_ms</code>(比较长没贴出)，<br><code>v34</code>为<code>purchase_date_ms</code>。</p>
+<p>也就是<code>purchase_date_ms&gt;request_date_ms</code>。</p>
+<p>至此恢复逻辑全部完成。</p>
+<h2 id="梳理逻辑"><a href="#梳理逻辑" class="headerlink" title="梳理逻辑"></a>梳理逻辑</h2><p>之前<code>AES</code>部分只看到了加密，通过交叉引用可以定位到解密函数位于入口函数<code>start</code>中。</p>
+<p>出于篇幅限制，这里就不贴代码了。简单口述一下。</p>
+<p>当点击恢复按钮时，会从<code>AppStore</code>获取凭证数据并进行时间等校验，之后再将获取的数据加密保存到文件中。</p>
+<p>实际上是通过<code>standardUserDefaults</code>保存，其路径为：<br><code>/System/Volumes/Data/Users/$USER/Library/Containers/cn.better365.ishot/Data/Library/Preferences/cn.better365.ishot.plist</code></p>
+<p>当应用启动时，入口函数<code>start</code>根据保存的信息，解密并校验。另外试用逻辑也是在此处校验。</p>
+<p>还值得一提的是<code>AES</code>的密钥是根据设备信息生成的，所以理论上这个注册文件不能直接发往其它机器。</p>
+<h2 id="猜想验证"><a href="#猜想验证" class="headerlink" title="猜想验证"></a>猜想验证</h2><p>构造数据包(只保留关键部分):</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;receipt&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="comment">// ....</span></span><br><span class="line">    <span class="attr">&quot;request_date_ms&quot;</span><span class="punctuation">:</span> <span class="string">&quot;0&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;in_app&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">            <span class="punctuation">&#123;</span></span><br><span class="line">             <span class="attr">&quot;product_id&quot;</span><span class="punctuation">:</span><span class="string">&quot;ishotfeixuqidingyue20220212&quot;</span><span class="punctuation">,</span></span><br><span class="line">             <span class="comment">// ....</span></span><br><span class="line">             <span class="attr">&quot;purchase_date_ms&quot;</span><span class="punctuation">:</span><span class="string">&quot;9747829370000&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;status&quot;</span><span class="punctuation">:</span> <span class="number">0</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>启用<code>map local tool</code></p>
+<img src="/2022/03/30/ishot_crack/11.png" class="" alt="map_local">
+
+<p>再次恢复购买</p>
+<img src="/2022/03/30/ishot_crack/12.png" class="" alt="restore">
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>来自<code>AppStore</code>的应用的安全性实际上和传统的软件安全性一样。</p>
+<p>本文中软件存在最大的问题在于轻信了<code>AppStore</code>的返回凭证而未进行二次校验，这就给了一些不法之徒可趁之机。</p>
+<p>最后提一壶，<code>ishot</code>确实非常不错，建议有能力的朋友可以去支持一下这款国产软件发展。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/AppStore%E5%86%85%E8%B4%AD-OSX-M1-Apple-Sillcon-%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/" rel="tag"># AppStore内购 OSX M1(Apple Sillcon) 逆向工程实践</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/08/24/Dash_crack/" rel="prev" title="Dash_crack -- OSX M1(Apple Sillcon) 逆向工程实践">
+                  <i class="fa fa-angle-left"></i> Dash_crack -- OSX M1(Apple Sillcon) 逆向工程实践
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/10/11/compiler_design_practice/" rel="next" title="编译器设计与实践">
+                  编译器设计与实践 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ewing</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">38k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:20</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"piz-ewing/piz-ewing.github.io","issue_term":"pathname","theme":"github-light"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+
+</body>
+</html>

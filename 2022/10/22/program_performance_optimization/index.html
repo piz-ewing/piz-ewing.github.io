@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"piz-ewing.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="结合这两天碰到的一个实例简单聊一下这个话题。 本文带有很强的主观意识，若和各位看官的想法冲突，请持有保留态度阅读。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="程序性能优化">
+<meta property="og:url" content="https://piz-ewing.github.io/2022/10/22/program_performance_optimization/index.html">
+<meta property="og:site_name" content="ewing">
+<meta property="og:description" content="结合这两天碰到的一个实例简单聊一下这个话题。 本文带有很强的主观意识，若和各位看官的想法冲突，请持有保留态度阅读。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-10-22T18:10:00.000Z">
+<meta property="article:modified_time" content="2022-10-22T18:10:00.000Z">
+<meta property="article:author" content="ewing">
+<meta property="article:tag" content="performance">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://piz-ewing.github.io/2022/10/22/program_performance_optimization/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://piz-ewing.github.io/2022/10/22/program_performance_optimization/","path":"2022/10/22/program_performance_optimization/","title":"程序性能优化"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>程序性能优化 | ewing</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@next-theme/pjax@0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/pjax.js" defer></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.5.0/dist/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">ewing</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-explorer"><a href="/explorer/" rel="section"><i class="fa fa-binoculars fa-fw"></i>浏览</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E6%95%85%E4%BA%8B"><span class="nav-number">1.</span> <span class="nav-text">背景故事</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%89%E6%8B%A9%E5%90%88%E9%80%82%E7%9A%84%E8%AF%AD%E8%A8%80"><span class="nav-number">2.</span> <span class="nav-text">选择合适的语言</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CPP"><span class="nav-number">2.1.</span> <span class="nav-text">CPP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%97%E4%BD%99"><span class="nav-number">2.2.</span> <span class="nav-text">冗余</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%A7%E8%83%BD"><span class="nav-number">2.3.</span> <span class="nav-text">性能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">2.4.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8E%E5%93%AA%E9%87%8C%E5%BC%80%E5%A7%8B%E4%BC%98%E5%8C%96"><span class="nav-number">3.</span> <span class="nav-text">从哪里开始优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E7%A0%81%E5%89%8D%E7%9A%84%E6%80%9D%E8%80%83"><span class="nav-number">4.</span> <span class="nav-text">编码前的思考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9D%82%E8%B0%88"><span class="nav-number">5.</span> <span class="nav-text">杂谈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ewing"
+      src="https://avatars.githubusercontent.com/u/78925867?v=4">
+  <p class="site-author-name" itemprop="name">ewing</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/piz-ewing" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;piz-ewing" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:piz.ewing@gmail.com" title="E-Mail → mailto:piz.ewing@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://piz-ewing.github.io/2022/10/22/program_performance_optimization/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars.githubusercontent.com/u/78925867?v=4">
+      <meta itemprop="name" content="ewing">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ewing">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="程序性能优化 | ewing">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          程序性能优化
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-10-22 18:10:00" itemprop="dateCreated datePublished" datetime="2022-10-22T18:10:00+00:00">2022-10-22</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>7 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>结合这两天碰到的一个实例简单聊一下这个话题。</p>
+<p>本文带有很强的主观意识，若和各位看官的想法冲突，请持有保留态度阅读。</p>
+<span id="more"></span>
+
+<hr>
+<h2 id="背景故事"><a href="#背景故事" class="headerlink" title="背景故事"></a>背景故事</h2><p>这两天帮一个老朋友优化了一份代码，<br>大致功能是windows下枚举系统的一些关键信息，<br>规整并输出到指定格式的文件中。</p>
+<h2 id="选择合适的语言"><a href="#选择合适的语言" class="headerlink" title="选择合适的语言"></a>选择合适的语言</h2><p>在我的要求下，老朋友将代码发过来作为参考，<code>cpp</code> 实现，<br>大约有 <code>5000</code> 行代码，冗余严重，性能不容乐观。</p>
+<p>这里出现了三个关键词，<code>cpp</code> 、<code>冗余</code>、<code>性能</code>。</p>
+<h3 id="CPP"><a href="#CPP" class="headerlink" title="CPP"></a>CPP</h3><p><code>cpp</code> 被大部分人认为是接近 <code>c</code> 的底层语言。底层语言的性能通常较高，很多博客文章都会将其作为卖点而忽略了一个事实。</p>
+<p><strong><code>cpp</code> 可以实现高性能程序，但不代表使用 <code>cpp</code> 实现的程序一定是高性能的。对应用该语言的人来说，通常使用 <code>cpp</code> 实现高性能、稳定的程序难度非常高。同时也很容易忽略一个问题，即程序本身是 <code>计算密集型</code> 还是 <code>IO密集型</code>，对于不同情景来说，<code>cpp</code> 未必是最适合的语言。</strong></p>
+<p><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000039869861">Linus 时隔十一年再次抨击 C++ ：糟糕透顶！毫无用处！</a></p>
+<p>就和 <code>linus</code> 多次吐槽 <code>cpp</code> 一样，由于其难度过高，很多开发者并不具备使用它的能力。一门语言在使用时应当是清晰的，透明的，其编码思路是编译器能理解并能提出相应建议的。<code>cpp</code> 显然在很多方面仍旧存在欠缺。</p>
+<h3 id="冗余"><a href="#冗余" class="headerlink" title="冗余"></a>冗余</h3><p>另一方面，使用 <code>cpp</code> 时容易重复造轮子，更可怕是容易在不熟悉<code>系统框架</code>时造出一些性能低下的轮子，并直接作用于项目。</p>
+<p>轮子本身是好的，通过实践深入系统架构，加深理解的同时也能推陈出新。只是当项目目标不在轮子本身这块时，使用成熟的第三方框架是明智的选择。</p>
+<h3 id="性能"><a href="#性能" class="headerlink" title="性能"></a>性能</h3><p>俗话说，“底层语言抠细节，高层语言搞设计”（刚编的），安卓系统就是一个好例子，使用 <code>java</code> 和 <code>cpp</code> 分别去解决不同层面的问题。</p>
+<p>前面提到了 <code>计算密集型</code> 还是 <code>IO密集型</code>。对于 <code>计算密集型</code>，当程序性能问题发生在大量复杂的运算中时，使用底层语言能减少抽象成本，生成出性能更好的指令。而对于 <code>IO密集型</code> 来说，程序自身的性能就不在首要位置了，大量的时间被消耗到了IO等待中。针对这一问题，系统层面又提出了多路复用等各种手段，简单的说，一是IO可用时去做IO，二是减少IO本身的开销，内存拷贝等，这些都是后话了。</p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p><code>cpp</code> 不是解决性能问题的万金油，应当从实际出发，选择更贴合目标的语言。</p>
+<p>这也是老朋友为什么使用高性能语言却没能得到想要的高性能的主要原因之一。</p>
+<h2 id="从哪里开始优化"><a href="#从哪里开始优化" class="headerlink" title="从哪里开始优化"></a>从哪里开始优化</h2><p>一般来说，不考虑重构的话，优化可以借助一些性能分析工具，通过对函数、方法的占用时间快速定位热点代码部分。</p>
+<p>例如 <code>pprof</code> 或 <code>perf</code> 工具生成信息，windows可以使用vs自带的性能分析工具。</p>
+<p>无论使用哪种工具，需要重点关注的都是比较耗时的操作在哪个函数或者调用中。</p>
+<p>优化的方向主要有：</p>
+<ol>
+<li>函数结构、算法</li>
+<li>框架或模型</li>
+</ol>
+<p>无论是哪种，都应该带着“它为什么会耗时，它有没有优化的可能或必要性”这样的问题进行探索。</p>
+<p>另一种便是在考虑重构时，对需求重新分析，尽可能的一开始就避免低效的代码。</p>
+<h2 id="编码前的思考"><a href="#编码前的思考" class="headerlink" title="编码前的思考"></a>编码前的思考</h2><p>在这个实例中，首先进行需求分析。</p>
+<ol>
+<li>枚举系统</li>
+<li>规整数据</li>
+<li>输出文件</li>
+</ol>
+<p>朋友在编写代码时，认为能通过多线程并发解决数据量过大的问题，故在代码中创建了很多的线程。</p>
+<p>多线程是个双刃剑。<br>它能有效利用CPU资源，这在编译器中很常见，多线程编译会快上许多，在解决 <code>计算密集型</code> 程序时，能有效发挥作用。但随之会引出一个问题，多线程中使用共享资源的同步问题。需要考虑到锁本身的开销就很大，线程资源的维护也存在开销。</p>
+<p><strong>线程并不是越多越好。可以考虑：</strong></p>
+<p><em>进程时间片会分给线程，若线程过多，那么每个线程的有效时间就会减少，线程切换本身就会消耗一定的计算资源，若线程的有效时间过低，切换线程的开销就会被凸显。</em></p>
+<p>回到需求，枚举系统是一个 <code>Native API</code> 调用过程，整理数据是一个计算过程，输出文件是一个 <code>IO</code> 过程。</p>
+<p>核心如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">any <span class="title function_">foo</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> (;;) &#123;</span><br><span class="line">        any data = enum_system();</span><br><span class="line">        data.translate(FMT);</span><br><span class="line">        data.write2file();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>简单分类，前两个过程都可以使用多线程优化，第三个则需要对文件IO优化。</p>
+<p>仔细思考，如果将IO操作放到线程中处理会引发什么问题？</p>
+<p>没错数据同步问题，会出现多个线程对同一个文件的写入操作。</p>
+<p>此时再将IO操作放到独立的线程中，将成为一个典型的 PV问题。</p>
+<blockquote>
+<p>有一个有限缓冲区和两个线程：生产者和消费者。他们分别不停地把产品放入缓冲区和从缓冲区中拿走产品。一个生产者在缓冲区满的时候必须等待，一个消费者在缓冲区空的时候也必须等待。另外，因为缓冲区是临界资源，所以生产者和消费者之间必须互斥执行。</p>
+</blockquote>
+<p>关于PV问题的文章有很多，本文就不啰嗦了。</p>
+<p>接着便是文件IO操作如何优化的问题。<br>通常情况下，使用异步IO即可，只是windows下实现起来异常复杂。<br>另一种简单的办法便是减少IO次数，引入写缓冲机制，即在写缓冲未满时，写入会保存到缓冲区，直到数据总量超过缓冲区大小时再一次写出。<br>这种办法对于频繁的小数据写出格外有效，符合上面的需求。</p>
+<p>接下来还需要考虑乱序问题，即写出的数据乱序该如何处理。一旦引入这个问题，多线程就不见得是好事，若放到内存中排序，则需要大量的内存来存放这些数据。若使用锁，那多线程将失去原有的意义。当然也可以通过一些中间件进行处理。</p>
+<h2 id="杂谈"><a href="#杂谈" class="headerlink" title="杂谈"></a>杂谈</h2><p>有位大师说过，要“避免过早的优化”，实时要求低的场景中，也许根本就不存在优化需求。</p>
+<p>需求分析是很重要，对可接受的时间评估，如果能达到可接受范围，再考虑是否有迫切的优化需要。开始有一个预期，也能对后期优化指明方向，即对哪里可能存在的性能问题了然于胸。</p>
+<p>对于某个底层调用非常耗时又不得不去使用时，在应用层面优化所产生的效益会大大降低。这种情景下，大佬们都会写底层的部分代码，针对某一部分特化处理。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>总之，性能问题中没有“银弹”，需要到不同纬度中寻找答案，不能盲目使用语言或多线程等手段绕开，也不是一味的去优化算法，需要实事求是，从性能问题的源头出发稳扎稳打，否则会适得其反。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/performance/" rel="tag"># performance</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/10/19/socks5/" rel="prev" title="SOCKS5 代理?">
+                  <i class="fa fa-angle-left"></i> SOCKS5 代理?
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/01/09/ue5_asset_unpack_reverse/" rel="next" title="UE5 游戏资源解包与逆向工程实践分享">
+                  UE5 游戏资源解包与逆向工程实践分享 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ewing</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">38k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:20</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"piz-ewing/piz-ewing.github.io","issue_term":"pathname","theme":"github-light"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+
+</body>
+</html>

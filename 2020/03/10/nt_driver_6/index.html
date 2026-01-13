@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"piz-ewing.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="nt网络过滤(6)--WFP">
+<meta property="og:url" content="https://piz-ewing.github.io/2020/03/10/nt_driver_6/index.html">
+<meta property="og:site_name" content="ewing">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://piz-ewing.github.io/2020/03/10/nt_driver_6/image-20221010190529942.png">
+<meta property="og:image" content="https://piz-ewing.github.io/2020/03/10/nt_driver_6/image-20221010190545065.png">
+<meta property="og:image" content="https://piz-ewing.github.io/2020/03/10/nt_driver_6/image-20221010190629752.png">
+<meta property="article:published_time" content="2020-03-10T08:54:00.000Z">
+<meta property="article:modified_time" content="2020-03-10T08:54:00.000Z">
+<meta property="article:author" content="ewing">
+<meta property="article:tag" content="nt driver">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://piz-ewing.github.io/2020/03/10/nt_driver_6/image-20221010190529942.png">
+
+
+<link rel="canonical" href="https://piz-ewing.github.io/2020/03/10/nt_driver_6/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://piz-ewing.github.io/2020/03/10/nt_driver_6/","path":"2020/03/10/nt_driver_6/","title":"nt网络过滤(6)--WFP"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>nt网络过滤(6)--WFP | ewing</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@next-theme/pjax@0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/pjax.js" defer></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.5.0/dist/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">ewing</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-explorer"><a href="/explorer/" rel="section"><i class="fa fa-binoculars fa-fw"></i>浏览</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WFP"><span class="nav-number">2.</span> <span class="nav-text">WFP</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#WFP%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">2.1.</span> <span class="nav-text">WFP是什么?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%87%E6%BB%A4%E5%BC%95%E6%93%8E%E6%A6%82%E8%A7%88"><span class="nav-number">2.2.</span> <span class="nav-text">过滤引擎概览</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Callout%E6%B3%A8%E5%86%8C%E5%8F%8A%E5%8F%8D%E6%B3%A8%E5%86%8C"><span class="nav-number">3.</span> <span class="nav-text">Callout注册及反注册</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8%E5%86%8C"><span class="nav-number">3.1.</span> <span class="nav-text">注册</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8D%E6%B3%A8%E5%86%8C"><span class="nav-number">3.2.</span> <span class="nav-text">反注册</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Callout%E4%B8%AD%E7%9A%84%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0"><span class="nav-number">4.</span> <span class="nav-text">Callout中的回调函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B1%82%E4%B8%8E%E5%AD%90%E5%B1%82"><span class="nav-number">5.</span> <span class="nav-text">分层与子层</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%A7%88%E4%B8%8E%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">概览与总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ewing"
+      src="https://avatars.githubusercontent.com/u/78925867?v=4">
+  <p class="site-author-name" itemprop="name">ewing</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/piz-ewing" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;piz-ewing" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:piz.ewing@gmail.com" title="E-Mail → mailto:piz.ewing@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://piz-ewing.github.io/2020/03/10/nt_driver_6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars.githubusercontent.com/u/78925867?v=4">
+      <meta itemprop="name" content="ewing">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ewing">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="nt网络过滤(6)--WFP | ewing">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          nt网络过滤(6)--WFP
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-03-10 08:54:00" itemprop="dateCreated datePublished" datetime="2020-03-10T08:54:00+00:00">2020-03-10</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.9k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>7 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><hr>
+<span id="more"></span>
+
+<hr>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>作为现在主流的过滤方案 <code>WFP</code> 已经占据一定市场地位，<br>毕竟到本文行文这个时间点上，还在使用xp系统的已经屈指可数了。</p>
+<p>本文将来聊一聊<code>WFP</code> 有关的一些内容。</p>
+<h2 id="WFP"><a href="#WFP" class="headerlink" title="WFP"></a>WFP</h2><h3 id="WFP是什么"><a href="#WFP是什么" class="headerlink" title="WFP是什么?"></a>WFP是什么?</h3><blockquote>
+<p>By providing a simpler development platform, WFP is designed to replace previous packet filtering technologies such as Transport Driver Interface (TDI) filters, Network Driver Interface Specification (NDIS) filters, and Winsock Layered Service Providers (LSP).Starting in Windows Server 2008 and Windows Vista, the firewall hook and the filter hook drivers are not available; applications that were using these drivers should use WFP instead.</p>
+</blockquote>
+<p>WFP 设计目的是为了替代以前的数据包过滤技术，例如 TDI 过滤， NDIS 过滤 以及 LSP。自 <code> Windows Server 2008 &amp;&amp; Windows Vista</code> 起，以前的过滤方式不再有效，这些程序均需要改用 <code>WFP</code>实现。</p>
+<img src="/2020/03/10/nt_driver_6/image-20221010190529942.png" class="" alt="image-20221010190529942">
+
+
+
+<p>首先过滤器引擎包含用户模式组件及内核模式组件两大部分，它们将共同完成数据过滤工作。<br>然而无论使用用户模式过滤引擎还是内核模式过滤引擎，最终都是与内核模式过滤引擎交互。</p>
+<p>再看这两个组件中又包含有多个过滤层，通常称为分层，这多个过滤层又被分别对应着具体的网络协议栈。<br>又根据过滤层所属的组件，分为了用户模式过滤层及内核模式过滤层。</p>
+<p>用户模式组件是针对 <code>RPC</code> 和 <code>IPsec</code> 的过滤，其中包含有10个用户模式过滤层。<br>内核模式组件属于 <code>WFP</code>的核心部分，主要在 <code>TPC/IP</code>协议栈及传输层进行过滤，包含大约50个内核模式过滤层。</p>
+<p>接着看 <code>Shim</code>，通常翻译为垫片，其被以内核模块的形式插入到网络协议栈中，负责网络协议栈和过滤引擎交互，关于垫片，在实际开发并不需要关注。</p>
+<h3 id="过滤引擎概览"><a href="#过滤引擎概览" class="headerlink" title="过滤引擎概览"></a>过滤引擎概览</h3><img src="/2020/03/10/nt_driver_6/image-20221010190545065.png" class="" alt="image-20221010190545065">
+
+
+
+<p>在概览图和上面的框架图中，都能看到一个名为 <code>Callout</code> 的模块，官网上使用的机翻，翻译为 标记、标注，由于该翻译不能反映其特性，本文中，决定不对其进行翻译。</p>
+<p><strong>那么<code>Callout</code> 是什么呢?</strong><br>在此先简单理解为，当过滤引擎检测到过滤条件为<code>TRUE</code>时，会触发相应行为，<code>Callout</code>则用于定义被触发的行为。</p>
+<p>由此便可以将 <code>WFP</code> 驱动开发分为两个部分:</p>
+<ol>
+<li>将 <code>Callout</code> 添加到指定位置</li>
+<li>定义 <code>Callout</code> 中的行为</li>
+</ol>
+<h2 id="Callout注册及反注册"><a href="#Callout注册及反注册" class="headerlink" title="Callout注册及反注册"></a><code>Callout</code>注册及反注册</h2><p>本文并不打算贴源码，只对关键函数进行说明，可配合文末<code>github</code>中的源码阅读。</p>
+<h3 id="注册"><a href="#注册" class="headerlink" title="注册"></a>注册</h3><ol>
+<li>FwpmEngineOpen – 用于打开过滤引擎，返回一个句柄</li>
+<li>FwpmTransactionBegin – 设置会话权限，设置为0即可</li>
+<li>FwpsCalloutRegister – 注册 <code>Callout</code> 到过滤引擎，从其参数上看，也可看做绑定设备对象</li>
+<li>FwpmCalloutAdd      – 正式向过滤引擎添加 <code>Callout</code>，与上面注册的 <code>Callout</code> 相关联</li>
+<li>FwpmSubLayerAdd     – 添加一个子层(可以不添加)，通过控制子层的权重，使得本驱动的过滤模块更具话语权</li>
+<li>FwpmFilterAdd       – 添加一个过滤器</li>
+<li>FwpmTransactionCommit – 提交以上内容，在此函数被正确调用后，过滤正式生效</li>
+<li>FwpmTransactionAbort – 在上述过程失败时进行回滚</li>
+</ol>
+<p>接下来将对其中重要的部分逐步说明<br><strong>第<code>3</code>步中</strong>，会用到结构<code>FWPS_CALLOUT</code>，其成员说明如下:<br><code>calloutKey</code> 对应一个 <code>GUID</code>，作为本 <code>Callout</code>的唯一标识<br><code>classifyFn</code> 会在触发过滤时被调用，可以在其中拦截&#x2F;放行当前操作。<br><code>flowDeleteNotifyFn</code> 会在数据流将终止且该数据流已关联上下文时被调用<br><code>notifyFn</code> 在加入或移除过滤器时触发。</p>
+<p><strong>第<code>4</code>步中</strong>，会用到结构 <code>FWPM_CALLOUT</code>，其中关键成员说明如下:<br><code>applicableLayer</code> 指明该 <code>Callout</code> 适用于哪一个层。<br><code>calloutKey</code>对应到第三步中 <code>Callout</code> 的唯一标识，如此便能将本结构与第<code>3</code>步中的结构进行关联。</p>
+<p><strong>第<code>5</code>步中</strong>，添加一个子层，并非必要操作，只是在添加子层后，能够更加灵活的控制过滤模块的位置。</p>
+<p><strong>第<code>6</code>步中</strong>，会用到 <code>FWPM_FILTER</code> 结构，其中关键成员说明如下:<br><code>layerKey</code> 指明该过滤器被添加到哪个层，设置为与 <code>applicableLayer</code> 一致即可。<br><code>displayData</code> 字符描述，不重要<br><code>action.type</code> 指明过滤器的操作类型，通常使用 <code>FWP_ACTION_CALLOUT_TERMINATING</code> 或 <code>FWP_ACTION_CALLOUT_INSPECTION</code>，二者都会调用 <code>Callout</code>，区别在于是否允许阻止&#x2F;允许操作。<br><code>action.calloutKey</code> 第<code>3</code>步的 <code>GUID</code>，将过滤器与<code>Callout</code>关联，是否需要关联还取决于上面 <code>type</code>。<br><code>subLayerKey</code> 指定子层，如果第<code>5</code>步中，不添加新的子层，可以指定为系统默认子层<code>FWPM_SUBLAYER_UNIVERSAL</code>。<br><code>weight.type</code> 指定过滤器权重，将该type设置为 FWP_EMPTY，可以由系统自动分配权重。<br><code>numFilterConditions</code> 设置过滤条件个数，可以是零到多个。<br><code>filterCondition</code> 这是个结构体数组，可以在中间指定过滤条件，注意条件个数要与<code>numFilterConditions</code>一致。<br><code>filterConditions[0].fieldKey</code> 指明过滤的条件<br><code>filterConditions[0].matchType</code> 指明匹配的方式<br><code>filterConditions[0].conditionValue.type</code> 指明值的类型<br><code>filterConditions[0].conditionValue.v4AddrMask</code> 指明值，这是个联合体，应根据类型选定需要的成员</p>
+<p>e.g.<br><code>A(条件) ==(匹配方式) B(值)</code></p>
+<p>相关参考:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/previous-versions/windows/embedded/gg157394%28v=winembedded.80%29">layer</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-au/windows-hardware/drivers/network/using-bind-or-connect-redirection">Using Bind or Connect Redirection</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/previous-versions/windows/embedded/gg157655%28v=winembedded.80%29">fieldKey</a></li>
+</ul>
+<h3 id="反注册"><a href="#反注册" class="headerlink" title="反注册"></a>反注册</h3><p>反注册为注册的逆过程，类似栈操作，先入后出</p>
+<ol>
+<li>FwpmFilterDeleteById</li>
+<li>FwpmSubLayerDeleteByKey</li>
+<li>FwpmCalloutDeleteById</li>
+<li>FwpsCalloutUnregisterById</li>
+<li>FwpmEngineClose</li>
+</ol>
+<p>因为很简单，本文就不说明了。</p>
+<h2 id="Callout中的回调函数"><a href="#Callout中的回调函数" class="headerlink" title="Callout中的回调函数"></a><code>Callout</code>中的回调函数</h2><p>在上节中以及提到，<code>Callout</code>一共有<code>3</code>个回调函数可以供用户处理。</p>
+<p>其中<br><code>notifyFn</code> 及 <code>flowDeleteNotifyFn</code>，应用较少，<br><code>flowDeleteNotifyFn</code> 在获取流数据时可以由它来最后回收资源。</p>
+<p>关于绑定流句柄上下文的函数有:<br><code>FwpsFlowAssociateContext0 </code><br><code>FwpsFlowRemoveContext0</code></p>
+<p>重点说一下 <code>classifyFn</code>，这个函数有<code>7</code>个参数，原型如下</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">FwpsCalloutClassifyFn1</span><span class="params">(</span></span><br><span class="line"><span class="params">  <span class="type">const</span> FWPS_INCOMING_VALUES0 *inFixedValues,</span></span><br><span class="line"><span class="params">  <span class="type">const</span> FWPS_INCOMING_METADATA_VALUES0 *inMetaValues,</span></span><br><span class="line"><span class="params">  <span class="type">void</span> *layerData,</span></span><br><span class="line"><span class="params">  <span class="type">const</span> <span class="type">void</span> *classifyContext,</span></span><br><span class="line"><span class="params">  <span class="type">const</span> FWPS_FILTER1 *`filter`,</span></span><br><span class="line"><span class="params">  UINT64 flowContext,</span></span><br><span class="line"><span class="params">  FWPS_CLASSIFY_OUT0 *classifyOut</span></span><br><span class="line"><span class="params">)</span></span><br></pre></td></tr></table></figure>
+
+<p><code>inFixedValues</code> 包含网络数据信息，例如ip port等<br><code>inMetaValues</code> 元数据,包含和过滤相关的信息，其内成员并不都可用，需要配合宏<code>FWPS_IS_METADATA_FIELD_PRESENT</code>测试<br><code>layerData</code>    网络原始数据<br><code>classifyContext</code> 驱动的上下文信息<br><code>filter</code> 过滤器相关信息<br><code>flowContext</code> 流句柄关联的上下文信息<br><code>classifyOut</code> 返回值，可以在该结构的 <code>actionType</code> 中指示动作类型，诸如 拦截放行，下发到下层过滤器等操作。</p>
+<h2 id="分层与子层"><a href="#分层与子层" class="headerlink" title="分层与子层"></a>分层与子层</h2><p>简单说一下分层与子层。<br>在读源码的时候我也困惑了一会，为何一个子层可以用于不同分层的过滤器。</p>
+<img src="/2020/03/10/nt_driver_6/image-20221010190629752.png" class="" alt="image-20221010190629752">
+
+
+<p>上图就是分层与子层之间的关系了。</p>
+<p>事实上，每一个分层都会涵盖所有子层，也就是说子层是公用的。</p>
+<h2 id="概览与总结"><a href="#概览与总结" class="headerlink" title="概览与总结"></a>概览与总结</h2><p>首先 WFP 分为两大组件，组件中又包含多个分层(过滤层)，每个分层中又涵盖所有子层，每个子层内又包含一定数量的过滤器，这些过滤器只会在其适配的模式下进行工作，<br>过滤器中又包含条件和 <code>Callout</code>，通过注册 <code>Callout</code>，就能对条件成立的数据包进行更细粒度的过滤。<br>过滤器中也可以不包含 <code>Callout</code> 仅根据条件进行过滤，又或是不包含条件，仅依赖 <code>Callout</code> 进行过滤。<br>如果都不包含，那这个过滤器就没意义了。</p>
+<p>本文对 WFP 相关的知识只是进行了初步的介绍，剩下的细节仍旧需要根据实际的需求进一步学习。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li>MSDN</li>
+<li>各种各样的源码及文章</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/JaredWright/WFPStarterKit/tree/master/Tutorial">github: JaredWright&#x2F;WFPStarterKit</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/nt-driver/" rel="tag"># nt driver</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/03/10/nt_driver_5/" rel="prev" title="nt网络过滤(5)--TDI过滤驱动">
+                  <i class="fa fa-angle-left"></i> nt网络过滤(5)--TDI过滤驱动
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/03/10/nt_driver_7/" rel="next" title="nt网络过滤(7)--NDIS">
+                  nt网络过滤(7)--NDIS <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ewing</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">38k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:20</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"piz-ewing/piz-ewing.github.io","issue_term":"pathname","theme":"github-light"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+
+</body>
+</html>

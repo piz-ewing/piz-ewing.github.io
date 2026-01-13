@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"piz-ewing.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="nt网络过滤(7)--NDIS">
+<meta property="og:url" content="https://piz-ewing.github.io/2020/03/10/nt_driver_7/index.html">
+<meta property="og:site_name" content="ewing">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://piz-ewing.github.io/2020/03/10/nt_driver_7/image-20221010190801287.png">
+<meta property="og:image" content="https://piz-ewing.github.io/2020/03/10/nt_driver_7/image-20221010190851303.png">
+<meta property="og:image" content="https://piz-ewing.github.io/2020/03/10/nt_driver_7/image-20221010190911633.png">
+<meta property="og:image" content="https://piz-ewing.github.io/2020/03/10/nt_driver_7/image-20221010190927907.png">
+<meta property="article:published_time" content="2020-03-10T08:55:00.000Z">
+<meta property="article:modified_time" content="2020-03-10T08:55:00.000Z">
+<meta property="article:author" content="ewing">
+<meta property="article:tag" content="nt driver">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://piz-ewing.github.io/2020/03/10/nt_driver_7/image-20221010190801287.png">
+
+
+<link rel="canonical" href="https://piz-ewing.github.io/2020/03/10/nt_driver_7/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://piz-ewing.github.io/2020/03/10/nt_driver_7/","path":"2020/03/10/nt_driver_7/","title":"nt网络过滤(7)--NDIS"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>nt网络过滤(7)--NDIS | ewing</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@next-theme/pjax@0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/pjax.js" defer></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.5.0/dist/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">ewing</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-explorer"><a href="/explorer/" rel="section"><i class="fa fa-binoculars fa-fw"></i>浏览</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NDIS"><span class="nav-number">2.</span> <span class="nav-text">NDIS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NDIS%E8%BF%87%E6%BB%A4%E9%A9%B1%E5%8A%A8%E7%8E%B0%E7%8A%B6"><span class="nav-number">3.</span> <span class="nav-text">NDIS过滤驱动现状</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#NDIS%E4%B8%AD%E9%97%B4%E5%B1%82%E4%B8%8ENDIS%E8%BF%87%E6%BB%A4%E5%B1%82%E7%9A%84%E6%8A%89%E6%8B%A9"><span class="nav-number">3.1.</span> <span class="nav-text">NDIS中间层与NDIS过滤层的抉择</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#filter"><span class="nav-number">4.</span> <span class="nav-text">filter</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E8%A7%A3%E6%9E%90"><span class="nav-number">4.1.</span> <span class="nav-text">数据解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%91%E9%80%81%E8%AF%B7%E6%B1%82%E8%BF%87%E6%BB%A4"><span class="nav-number">4.2.</span> <span class="nav-text">发送请求过滤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A5%E6%94%B6%E8%AF%B7%E6%B1%82%E8%BF%87%E6%BB%A4"><span class="nav-number">4.3.</span> <span class="nav-text">接收请求过滤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E5%AE%83"><span class="nav-number">4.4.</span> <span class="nav-text">其它</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ewing"
+      src="https://avatars.githubusercontent.com/u/78925867?v=4">
+  <p class="site-author-name" itemprop="name">ewing</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/piz-ewing" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;piz-ewing" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:piz.ewing@gmail.com" title="E-Mail → mailto:piz.ewing@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://piz-ewing.github.io/2020/03/10/nt_driver_7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars.githubusercontent.com/u/78925867?v=4">
+      <meta itemprop="name" content="ewing">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ewing">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="nt网络过滤(7)--NDIS | ewing">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          nt网络过滤(7)--NDIS
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-03-10 08:55:00" itemprop="dateCreated datePublished" datetime="2020-03-10T08:55:00+00:00">2020-03-10</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.4k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>5 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><hr>
+<span id="more"></span>
+
+<hr>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>作为本系列的最后一篇，将来聊一聊NDIS有关的话题。当然本文的话题也仅限于过滤。</p>
+<p>NDIS 作为整套网络协议的最底层，过滤上有着得天独厚的“地理”优势，同样的也会给它带来麻烦。<br>在NDIS层做过滤，主要是为了嗅探或修改数据包，而不适合去做与进程直接打交道的应用，如防火墙等。</p>
+<h2 id="NDIS"><a href="#NDIS" class="headerlink" title="NDIS"></a>NDIS</h2><img src="/2020/03/10/nt_driver_7/image-20221010190801287.png" class="" alt="image-20221010190801287">
+
+
+<p>NDIS全称是网络驱动接口规范，其分为三个层</p>
+<ul>
+<li>NDIS 协议驱动</li>
+<li>NDIS 中间层驱动 (NDIS过滤层驱动,在 NDIS 6.0 引入)</li>
+<li>NDIS 小端口驱动</li>
+</ul>
+<p>NDIS协议驱动与TDI传输器相接，TDI传输器通过调用NDIS库函数来构造一个NDIS Packet，再将其发送给NDIS小端口驱动。</p>
+<p>查了多份资料，NDIS协议驱动与TDI传输器看起来是一个整体的两个部分，上半部分负责和TDI层沟通，下半部分负责和NDIS层沟通。</p>
+<p>NDIS中间层驱动是一个特殊的驱动程序，对于其上层模拟成小端口驱动，对其下层又模拟成协议驱动。<br>它必须同时满足上下两套驱动程序所要求的编程接口，以实现透明化。通常可以用它实现多适配器时的负载均衡，或是流量嗅探。</p>
+<p>NDIS小端口驱动则负责管理网卡硬件及为上层提供接口。其不属于一个真正意义上的Windows 驱动程序，既不使用 Windows IO 管理器规范，也不接收处理 IRP，而是使用了一套自己实现的规范。</p>
+<p><strong>NDIS过滤层驱动，也称为 NDIS过滤驱动，为了与传统意义上的过滤驱动做区分，本文统一译为NDIS过滤层驱动，其在 NDIS 6.0 引入，与中间层驱动的作用相当，但拥有更高的效率及更简单的接口。</strong></p>
+<h2 id="NDIS过滤驱动现状"><a href="#NDIS过滤驱动现状" class="headerlink" title="NDIS过滤驱动现状"></a>NDIS过滤驱动现状</h2><p>由于NDIS过滤驱动在安装时会断一下网，这对于某些软件及某些环境都是是致命的。</p>
+<p>例如在网吧无盘环境下，常规的 NDIS过滤驱动就不能正常工作。</p>
+<p>折中方案又有 <code>NDIS HOOK</code> 等，但是 <code>NDIS HOOK</code> 存在明显的兼容性及稳定性问题，适用性不高。</p>
+<p>而日常开发中，对于协议驱动和小端口驱动的开发需求及相关资料都相对较少，通常都有较为成熟的解决方案。</p>
+<p>如果是自己通过NDIS中间层实现过滤驱动还涉及组包等问题，相对复杂。</p>
+<p>本文没有信心能把中间层讲清楚，要实现一个中间层过滤驱动，还需要协议驱动和小端口驱动的相关知识。</p>
+<h3 id="NDIS中间层与NDIS过滤层的抉择"><a href="#NDIS中间层与NDIS过滤层的抉择" class="headerlink" title="NDIS中间层与NDIS过滤层的抉择"></a>NDIS中间层与NDIS过滤层的抉择</h3><p>到底是该基于传统中间层驱动来写还是该基于新版的过滤层驱动来写。</p>
+<p>传统的中间层驱动兼容性会相对好一点，但是复杂性会高出很多，要写一个传统的中间驱动，既要注册为小端口驱动，又要注册为协议驱动。<br>而过滤层驱动，只需要注册为过滤层驱动即可，从实现上要比中间层驱动简单一些。</p>
+<p>在当前的微软驱动开发示例中，已经找不到中间层驱动了。</p>
+<p><strong>出于篇幅考虑，本文就结合 <code>filter</code> 简单介绍一下过滤层驱动的编写方式及相关知识。</strong></p>
+<h2 id="filter"><a href="#filter" class="headerlink" title="filter"></a>filter</h2><p>NDIS过滤层驱动初始化与卸载</p>
+<ol>
+<li>构造 NDIS_FILTER_DRIVER_CHARACTERISTICS 结构</li>
+<li>NdisFRegisterFilterDriver 注册为中间层驱动</li>
+<li>NdisRegisterDeviceEx 添加用于通信的设备对象</li>
+<li>NdisDeregisterDeviceEx</li>
+<li>NdisFDeregisterFilterDriver</li>
+</ol>
+<p>在 NDIS_FILTER_DRIVER_CHARACTERISTICS 结构中又需要注册一组接口，正是通过这组接口来实现过滤。</p>
+<p>一般来说，可以直接在 <code>filter</code> 的基础上进行二次开发，原本的 <code>filter</code> 中提供的接口是什么都不做的，需要由开发者挑选需要关注的接口自行实现。</p>
+<p>中间一些关于状态和操作的内容这里就跳过。</p>
+<p>在 NDIS_FILTER_DRIVER_CHARACTERISTICS 中，较为关注与数据包有关的接口：</p>
+<ul>
+<li>FilterReturnNetBufferLists</li>
+<li>FilterReceiveNetBufferLists</li>
+<li>FilterSendNetBufferListsComplete</li>
+<li>FilterSendNetBufferLists</li>
+</ul>
+<h3 id="数据解析"><a href="#数据解析" class="headerlink" title="数据解析"></a>数据解析</h3><img src="/2020/03/10/nt_driver_7/image-20221010190851303.png" class="" alt="image-20221010190851303">
+
+
+<p>在 NDIS过滤层中，数据包以NET_BUFFER的形式存在，它是构成数据包的基本结构。</p>
+<p>在每一个 NET_BUFFER 中拥有一个 MDL 链表。MDL 可以把数据缓冲区的地址映射到 NET_BUFFER 结构所指向的数据空间中。<br>由多个 NET_BUFFER 结构可以构成一个 NET_BUFFER_LIST。<br>在过滤层驱动中，就是依靠 NET_BUFFER_LIST 进行数据的发送与接收。</p>
+<p>在获取数据包时，会用到一些相关的宏<br>1.  NET_BUFFER_FIRST_MDL         &#x2F;&#x2F; 获取第一个 MDL<br>2.  NET_BUFFER_DATA_OFFSET       &#x2F;&#x2F; 网络数据包内容偏移</p>
+<p>1.  NET_BUFFER_CURRENT_MDL        &#x2F;&#x2F; 获取当前 MDL<br>2.  NET_BUFFER_CURRENT_MDL_OFFSET &#x2F;&#x2F; 获取当前 MDL 偏移以获取 Mac 帧的首地址</p>
+<p>*. <code>NdisQueryMdl</code> &#x2F;&#x2F;可用于获取相关信息</p>
+<h3 id="发送请求过滤"><a href="#发送请求过滤" class="headerlink" title="发送请求过滤"></a>发送请求过滤</h3><img src="/2020/03/10/nt_driver_7/image-20221010190911633.png" class="" alt="image-20221010190911633">
+
+
+<p>接收请求的行为过滤，主要是对 FilterReceiveNetBufferLists 的 ReceiveFlags 参数进行处理。</p>
+<h3 id="接收请求过滤"><a href="#接收请求过滤" class="headerlink" title="接收请求过滤"></a>接收请求过滤</h3><img src="/2020/03/10/nt_driver_7/image-20221010190927907.png" class="" alt="image-20221010190927907">
+
+
+<p>发送请求的行为过滤与接收请求的处理流程类似。</p>
+<h3 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h3><p>在传递接收请求的时候，需要区分同步异步情况。针对这两种情况选择不同的处理方式。<br>略，可参考 《面向Win8操作系统的网络包过滤关键技术研究》。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文写的过于简单仓促，由于篇幅限制，不能铺开来写，只能提供一个宏观上的印象。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="http://localhost/usr/uploads/2020/01/1681427991.pdf">面向Win8操作系统的网络包过滤关键技术研究</a></li>
+<li><a target="_blank" rel="noopener" href="http://localhost/usr/uploads/2020/01/3641122394.ppt">基于NDIS的网络编程</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-au/windows-hardware/drivers/network/ndis-core-functionality2">MSDN相关文档</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/nt-driver/" rel="tag"># nt driver</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/03/10/nt_driver_6/" rel="prev" title="nt网络过滤(6)--WFP">
+                  <i class="fa fa-angle-left"></i> nt网络过滤(6)--WFP
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/08/24/Dash_crack/" rel="next" title="Dash_crack -- OSX M1(Apple Sillcon) 逆向工程实践">
+                  Dash_crack -- OSX M1(Apple Sillcon) 逆向工程实践 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ewing</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">38k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:20</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"piz-ewing/piz-ewing.github.io","issue_term":"pathname","theme":"github-light"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+
+</body>
+</html>

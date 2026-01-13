@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"piz-ewing.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="nt文件系统(2)--minifilter">
+<meta property="og:url" content="https://piz-ewing.github.io/2020/03/10/nt_driver_2/index.html">
+<meta property="og:site_name" content="ewing">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-03-10T08:50:00.000Z">
+<meta property="article:modified_time" content="2020-03-10T08:50:00.000Z">
+<meta property="article:author" content="ewing">
+<meta property="article:tag" content="nt driver">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://piz-ewing.github.io/2020/03/10/nt_driver_2/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://piz-ewing.github.io/2020/03/10/nt_driver_2/","path":"2020/03/10/nt_driver_2/","title":"nt文件系统(2)--minifilter"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>nt文件系统(2)--minifilter | ewing</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@next-theme/pjax@0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/pjax.js" defer></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.5.0/dist/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">ewing</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-explorer"><a href="/explorer/" rel="section"><i class="fa fa-binoculars fa-fw"></i>浏览</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#minifilter%E5%9F%BA%E7%A1%80"><span class="nav-number">2.</span> <span class="nav-text">minifilter基础</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#minifilter%E6%A1%86%E6%9E%B6"><span class="nav-number">3.</span> <span class="nav-text">minifilter框架</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#DriverEntry"><span class="nav-number">3.1.</span> <span class="nav-text">DriverEntry</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E5%87%BD%E6%95%B0%E5%8F%8A%E7%BB%93%E6%9E%84"><span class="nav-number">3.2.</span> <span class="nav-text">相关函数及结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#minifilter%E4%B9%8B%E5%BA%94%E7%94%A8%E5%B1%82%E9%80%9A%E4%BF%A1"><span class="nav-number">3.3.</span> <span class="nav-text">minifilter之应用层通信</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#minifilter-%E5%8A%A8%E6%80%81%E5%AE%89%E8%A3%85%E5%8D%B8%E8%BD%BD"><span class="nav-number">4.</span> <span class="nav-text">minifilter 动态安装卸载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ewing"
+      src="https://avatars.githubusercontent.com/u/78925867?v=4">
+  <p class="site-author-name" itemprop="name">ewing</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/piz-ewing" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;piz-ewing" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:piz.ewing@gmail.com" title="E-Mail → mailto:piz.ewing@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://piz-ewing.github.io/2020/03/10/nt_driver_2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars.githubusercontent.com/u/78925867?v=4">
+      <meta itemprop="name" content="ewing">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ewing">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="nt文件系统(2)--minifilter | ewing">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          nt文件系统(2)--minifilter
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-03-10 08:50:00" itemprop="dateCreated datePublished" datetime="2020-03-10T08:50:00+00:00">2020-03-10</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><hr>
+<span id="more"></span>
+
+<hr>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>前面总结了 sfilter 相关的内容，接下来就该轮到minifilter了。</p>
+<h2 id="minifilter基础"><a href="#minifilter基础" class="headerlink" title="minifilter基础"></a>minifilter基础</h2><p>minifilter可以简单理解为微软自己开发了一个相当于sfilter的驱动，并提供了相关接口供其他驱动使用。</p>
+<p>由于sfilter本身的复杂性极高，一个是在不同版本系统下的兼容性问题，一个是与核心需要的业务逻辑相比，无关的代码太多，故使用 minifilter是一个很好的选择，但是由于 minifilter本身也是基于传统的设备过滤驱动实现的，故在系统中存在其他 sfilter 的时候优先级会比别人低。</p>
+<h2 id="minifilter框架"><a href="#minifilter框架" class="headerlink" title="minifilter框架"></a>minifilter框架</h2><h3 id="DriverEntry"><a href="#DriverEntry" class="headerlink" title="DriverEntry"></a>DriverEntry</h3><blockquote>
+<p>微型文件过滤驱动程序的DriverEntry例程必须按顺序执行以下步骤：</p>
+<ol>
+<li>初始化所需的全局变量</li>
+<li>通过调用FltRegisterFilter注册一个过滤器。</li>
+<li>通过调用FltStartFiltering启动过滤器。</li>
+<li>返回相应的 NTSTATUS 值。</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="5">
+<li>在卸载驱动时调用 FltUnregisterFilter 卸载过滤器</li>
+</ol>
+</blockquote>
+<h3 id="相关函数及结构"><a href="#相关函数及结构" class="headerlink" title="相关函数及结构"></a>相关函数及结构</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">NTSTATUS FLTAPI <span class="title function_">FltRegisterFilter</span><span class="params">(</span></span><br><span class="line"><span class="params">  PDRIVER_OBJECT          Driver,</span></span><br><span class="line"><span class="params">  <span class="type">const</span> FLT_REGISTRATION *Registration,</span></span><br><span class="line"><span class="params">  PFLT_FILTER            *RetFilter</span></span><br><span class="line"><span class="params">)</span>;</span><br></pre></td></tr></table></figure>
+<p>共有三个参数，第一个参数传入本驱动对象的指针，第二个参数是一个 FLT_REGISTRATION 结构，其中便存在注册过滤例程的地方了，第三个参数是一个返回值，其作用相当于一个句柄。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">NTSTATUS FLTAPI <span class="title function_">FltStartFiltering</span><span class="params">(</span></span><br><span class="line"><span class="params">  PFLT_FILTER Filter</span></span><br><span class="line"><span class="params">)</span>;</span><br></pre></td></tr></table></figure>
+<p>一个参数，即注册时返回的句柄。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">FLT_REGISTRATION</span> &#123;</span></span><br><span class="line">  USHORT                                      Size;                 <span class="comment">// 结构大小</span></span><br><span class="line">  USHORT                                      Version;              <span class="comment">// 结构版本</span></span><br><span class="line">  FLT_REGISTRATION_FLAGS                      Flags;                <span class="comment">// 过滤器标志</span></span><br><span class="line">  <span class="type">const</span> FLT_CONTEXT_REGISTRATION              *ContextRegistration; <span class="comment">// 上下文注册</span></span><br><span class="line">  <span class="type">const</span> FLT_OPERATION_REGISTRATION            *OperationRegistration; <span class="comment">// **操作回调例程**</span></span><br><span class="line">  PFLT_FILTER_UNLOAD_CALLBACK                 FilterUnloadCallback;   <span class="comment">// 卸载回调例程</span></span><br><span class="line">  PFLT_INSTANCE_SETUP_CALLBACK                InstanceSetupCallback;  <span class="comment">// 实例安装例程，卷实例加载时触发</span></span><br><span class="line">  PFLT_INSTANCE_QUERY_TEARDOWN_CALLBACK       InstanceQueryTeardownCallback;   <span class="comment">// 手工解除绑定时触发</span></span><br><span class="line">  PFLT_INSTANCE_TEARDOWN_CALLBACK             InstanceTeardownStartCallback;   <span class="comment">// 已经决定解绑时触发</span></span><br><span class="line">  PFLT_INSTANCE_TEARDOWN_CALLBACK             InstanceTeardownCompleteCallback; <span class="comment">// 实例解绑完成时触发</span></span><br><span class="line">  PFLT_GENERATE_FILE_NAME                     GenerateFileNameCallback;     <span class="comment">// 生成文件名回调</span></span><br><span class="line">  PFLT_NORMALIZE_NAME_COMPONENT               NormalizeNameComponentCallback;</span><br><span class="line">  PFLT_NORMALIZE_CONTEXT_CLEANUP              NormalizeContextCleanupCallback;</span><br><span class="line">  PFLT_TRANSACTION_NOTIFICATION_CALLBACK      TransactionNotificationCallback;</span><br><span class="line">  PFLT_NORMALIZE_NAME_COMPONENT_EX            NormalizeNameComponentExCallback;</span><br><span class="line">  PFLT_SECTION_CONFLICT_NOTIFICATION_CALLBACK SectionNotificationCallback;</span><br><span class="line">&#125; FLT_REGISTRATION, *PFLT_REGISTRATION;</span><br></pre></td></tr></table></figure>
+<p>具体可以参考 MSDN 相关</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/windows-hardware/drivers/ddi/fltkernel/ns-fltkernel-_flt_registration">FLT_REGISTRATION结构</a></li>
+</ul>
+<p>其中最为重要的便是 OperationRegistration 成员。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">FLT_OPERATION_REGISTRATION</span> &#123;</span></span><br><span class="line">  UCHAR                            MajorFunction;</span><br><span class="line">  FLT_OPERATION_REGISTRATION_FLAGS Flags;</span><br><span class="line">  PFLT_PRE_OPERATION_CALLBACK      PreOperation;</span><br><span class="line">  PFLT_POST_OPERATION_CALLBACK     PostOperation;</span><br><span class="line">  PVOID                            Reserved1;</span><br><span class="line">&#125; FLT_OPERATION_REGISTRATION, *PFLT_OPERATION_REGISTRATION;</span><br></pre></td></tr></table></figure>
+<p>MajorFunction 主功能号，Flags 指定过滤哪种类型的请求，可以为0， Pre IRP完成前执行的回调例程，Post IRP完成后执行的完成例程，Reserved1 保留供系统使用。</p>
+<p>例子:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> FLT_OPERATION_REGISTRATION</span><br><span class="line">fileMonitorCallbacks[] =</span><br><span class="line">&#123;</span><br><span class="line">    &#123;</span><br><span class="line">        IRP_MJ_CREATE,</span><br><span class="line">        <span class="number">0</span></span><br><span class="line">        PreNtCreateFile,</span><br><span class="line">        PostNtCreateFile</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        IRP_MJ_WRITE,</span><br><span class="line">        FLTFL_OPERATION_REGISTRATION_SKIP_PAGING_IO,<span class="comment">// 忽略分页读/写 请求</span></span><br><span class="line">        PreNtWriteFile,</span><br><span class="line">        PostNtWriteFile</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        IRP_MJ_OPERATION_END<span class="comment">//这个是必须要加的</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p><code>PFLT_PRE_OPERATION_CALLBACK</code> <code>FLT_POSTOP_CALLBACK_STATUS</code> 原型</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">PFLT_PRE_OPERATION_CALLBACK PfltPreOperationCallback;</span><br><span class="line"></span><br><span class="line">FLT_PREOP_CALLBACK_STATUS <span class="title function_">PfltPreOperationCallback</span><span class="params">(</span></span><br><span class="line"><span class="params">  PFLT_CALLBACK_DATA Data,</span></span><br><span class="line"><span class="params">  PCFLT_RELATED_OBJECTS FltObjects,</span></span><br><span class="line"><span class="params">  PVOID *CompletionContext</span></span><br><span class="line"><span class="params">)</span></span><br><span class="line">&#123;...&#125;</span><br><span class="line"></span><br><span class="line">PFLT_POST_OPERATION_CALLBACK PfltPostOperationCallback;</span><br><span class="line"></span><br><span class="line">FLT_POSTOP_CALLBACK_STATUS <span class="title function_">PfltPostOperationCallback</span><span class="params">(</span></span><br><span class="line"><span class="params">  PFLT_CALLBACK_DATA Data,</span></span><br><span class="line"><span class="params">  PCFLT_RELATED_OBJECTS FltObjects,</span></span><br><span class="line"><span class="params">  PVOID CompletionContext,</span></span><br><span class="line"><span class="params">  FLT_POST_OPERATION_FLAGS Flags</span></span><br><span class="line"><span class="params">)</span></span><br><span class="line">&#123;...&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其参数 <code>FLT_CALLBACK_DATA</code> 相当于对原来的 <code>IRP</code> 进行了包装，避免直接与<code>IRP</code>打交道。<br>另外可以通过其返回值轻易控制 IRP的状态，完成(FLT_PREOP_COMPLETE)，挂起(FLT_PREOP_PENDING)，传递(FLT_PREOP_SUCCESS_WITH_CALLBACK) 等等。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">FLT_CALLBACK_DATA</span> &#123;</span></span><br><span class="line">  FLT_CALLBACK_DATA_FLAGS     Flags;</span><br><span class="line">  PETHREAD                    Thread;</span><br><span class="line">  PFLT_IO_PARAMETER_BLOCK     Iopb;</span><br><span class="line">  IO_STATUS_BLOCK             IoStatus;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> _<span class="title">FLT_TAG_DATA_BUFFER</span> *<span class="title">TagData</span>;</span></span><br><span class="line">  <span class="class"><span class="keyword">union</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">      LIST_ENTRY QueueLinks;</span><br><span class="line">      PVOID      QueueContext[<span class="number">2</span>];</span><br><span class="line">    &#125;;</span><br><span class="line">    PVOID FilterContext[<span class="number">4</span>];</span><br><span class="line">  &#125;;</span><br><span class="line">  KPROCESSOR_MODE             RequestorMode;</span><br><span class="line">&#125; FLT_CALLBACK_DATA, *PFLT_CALLBACK_DATA;</span><br></pre></td></tr></table></figure>
+
+<p>minifilter 本身也提供了一系列函数用于处理 <code>FLT_CALLBACK_DATA</code> 的相关信息。</p>
+<p>例如可以通过 <code>FltGetFileNameInformation</code> 获取文件名信息，再通过 <code>FltParseFileNameInformation</code> 拆分为更加易用的格式，使用完毕之后再通过 <code>FltReleaseFileNameInformation</code> 回收相关资源。<br>又例如给文件对象绑定上下文信息等等操作。</p>
+<p>通过设置 IoStatus 则可以控制请求的结果信息。<br>在 <code>FLT_IO_PARAMETER_BLOCK</code> 也存放着许多需要关注的信息，如要 得到读写的具体内容等就要从该结构入手。<br>由于篇幅限制，就不一一展开，在MSDN文档上有对其详细的描述。</p>
+<h3 id="minifilter之应用层通信"><a href="#minifilter之应用层通信" class="headerlink" title="minifilter之应用层通信"></a>minifilter之应用层通信</h3><p>除了常规的设备通信方式外，minifilter内部封装了一套更为方便的通信机制。</p>
+<p>主要函数如下:<br><code>FltBuildDefaultSecurityDescriptor </code> 创建默认的安全描述符<br><code>FltCreateCommunicationPort</code> 创建一个服务端口</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">NTSTATUS status;</span><br><span class="line">PSECURITY_DESCRIPTOR sd;</span><br><span class="line">OBJECT_ATTRIBUTES oa;</span><br><span class="line">UNICODE_STRING uniString;</span><br><span class="line"></span><br><span class="line">status=FltBuildDefaultSecurityDescriptor(&amp;sd,FLT_PORT_ALL_ACCESS);</span><br><span class="line">RtlInitUnicodeString( &amp;uniString, MINISPY_PORT_NAME );</span><br><span class="line"></span><br><span class="line"><span class="comment">//初始化对象属性</span></span><br><span class="line">InitializeObjectAttributes( &amp;oa,</span><br><span class="line">    &amp;uniString,</span><br><span class="line">    OBJ_KERNEL_HANDLE|OBJ_CASE_INSENSITIVE,</span><br><span class="line">    <span class="literal">NULL</span>,</span><br><span class="line">    sd );</span><br><span class="line"></span><br><span class="line"><span class="comment">//内核建立通信端口</span></span><br><span class="line">status = FltCreateCommunicationPort(gFilterHandle,&amp;gServerPort,&amp;oa,<span class="literal">NULL</span>,MiniConnect,MiniDisconnect,MiniMessage,<span class="number">1</span>);</span><br><span class="line">FltFreeSecurityDescriptor( sd );</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>其中 <code>gFilterHandle</code> 及注册minifilter返回的句柄，<code>MiniConnect</code> <code>MiniDisconnect</code> <code>MiniMessage</code> 为事件回调，在相应事件到达时触发。<br>相关函数<br><code>FltCloseClientPort</code> 在 <code>MiniDisconnect </code>中关闭用户端口<br><code>FltSendMessage</code> 向正在等待的用户层发送<br><code>FltCloseCommunicationPort</code> 在驱动卸载时关闭监听端口</p>
+<p>##小拓展<br>Ps.刚刚在看相关博客时就发现一个他写了个<code>bug</code>，网上的代码真的不要随便用</p>
+<p>实际上之前用内核管道做过测试，这种异步IO的方式本身效率不高，并不适合频繁传输，<br>对频繁传输，还是推荐使用 IO方式中的其他方式，在同一进程上下文时，直接操作进程，并通过共享事件的方式做互相通知更为高效。</p>
+<p>有人肯定会说，别人都是说线程上下文，为什么你说的是进程上下文？<br>能否直接操作r3进程内存，看的是当前是进程上下文，一个进程中的多个线程的上下文都可以被直接操作，只是说判断某个线程是否属于某个进程要麻烦一丢丢，并非在某个特定的线程上下文才能访问进程空间。<br>例如调用 同步的<code>DeviceIoControl</code> 的线程会陷入内核调用派遣函数，那么派遣函数就和 <code>DeviceIoControl</code> 在同一线程上下文，也就在同一进程上下文，此时是可以直接操作进程空间的。<br>一般可以认为在异步中，其上下文是不可控的，这是由于实现异步的交付者是不可控的，你要说是某进程内部实现的协程也是可以的。这里主要指系统级的异步，极有可能会在其他进程的上下文交付。</p>
+<h2 id="minifilter-动态安装卸载"><a href="#minifilter-动态安装卸载" class="headerlink" title="minifilter 动态安装卸载"></a>minifilter 动态安装卸载</h2><p>网上随便找了一篇，并未测试，按照他的说法是在注册表中创建相关子键和键值</p>
+<blockquote>
+<p><code>SYSTEM\\CurrentControlSet\\Services\\DriverName\\Instances</code><br><code>SYSTEM\\CurrentControlSet\\Services\\DriverName\\Instances\\DriverName Instance</code></p>
+</blockquote>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/js2854/archive/2011/04/03/sysload.html">Minifilter的动态安装、加载及卸载</a></li>
+</ul>
+<p>话说回来，网上大多数流传已久的驱动加载方式本来就有点问题，会出现重启都卸载不干净的情况，编码不规范造成的，这块是个细节。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文是官方文档和众多参考文章汇集而成，由于 minifilter 并不需要像 sfilter 那样悉知细节，故相较之要简单许多。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/nt-driver/" rel="tag"># nt driver</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/03/10/nt_driver_1/" rel="prev" title="nt文件系统(1)--sfilter">
+                  <i class="fa fa-angle-left"></i> nt文件系统(1)--sfilter
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/03/10/nt_driver_3/" rel="next" title="nt文件系统(3)--文件透明加密">
+                  nt文件系统(3)--文件透明加密 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ewing</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">38k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:20</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"piz-ewing/piz-ewing.github.io","issue_term":"pathname","theme":"github-light"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+
+</body>
+</html>
